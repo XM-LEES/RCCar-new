@@ -38,7 +38,6 @@ wheeltec\can_callback.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_e
 wheeltec\can_callback.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 wheeltec\can_callback.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
 wheeltec\can_callback.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
-wheeltec\can_callback.o: D:\Software\keil\ARM\ARMCC\Bin\..\include\stdio.h
 wheeltec\can_callback.o: D:\Software\keil\ARM\ARMCC\Bin\..\include\string.h
 wheeltec\can_callback.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 wheeltec\can_callback.o: ../Core/Inc/FreeRTOSConfig.h
@@ -51,7 +50,3 @@ wheeltec\can_callback.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queu
 wheeltec\can_callback.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 wheeltec\can_callback.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 wheeltec\can_callback.o: ../WHEELTEC_BSP/Inc/bsp_can.h
-wheeltec\can_callback.o: ../WHEELTEC_BSP/Inc/bsp_ServoDrive.h
-wheeltec\can_callback.o: ../WHEELTEC_APP/Inc/RobotControl_task.h
-wheeltec\can_callback.o: ../WHEELTEC_APP/Inc/robot_select_init.h
-wheeltec\can_callback.o: ../WHEELTEC_APP/Inc/servo_basic_task.h

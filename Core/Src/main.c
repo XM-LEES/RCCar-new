@@ -1,4 +1,4 @@
-/* USER CODE BEGIN Header */
+﻿/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file           : main.c
@@ -62,14 +62,14 @@
 
 /* USER CODE BEGIN PV */
 
-static uint8_t HardWareVersion = HW_UnKnown; //系统硬件版本
+static uint8_t HardWareVersion = HW_UnKnown; //绯荤粺纭欢鐗堟湰
 
-uint8_t BlueToothBuffer = 0;//蓝牙串口接收缓冲
-uint8_t rosbuffer = 0;      //ROS串口接收缓冲区
-uint8_t usart1_buffer = 0;  //串口1接收缓冲区
-uint8_t rs485_buffer = 0;   //485接收缓冲区
+uint8_t BlueToothBuffer = 0;//钃濈墮涓插彛鎺ユ敹缂撳啿
+uint8_t rosbuffer = 0;      //ROS涓插彛鎺ユ敹缂撳啿鍖?
+uint8_t usart1_buffer = 0;  //涓插彛1鎺ユ敹缂撳啿鍖?
+uint8_t rs485_buffer = 0;   //485鎺ユ敹缂撳啿鍖?
 
-DebugType_t g_sys_debug = { 0 }; //全局调试变量
+DebugType_t g_sys_debug = { 0 }; //鍏ㄥ眬璋冭瘯鍙橀噺
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -82,18 +82,6 @@ void MX_FREERTOS_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-extern void Debug_SendServoExt(uint32_t ext_id, uint8_t cmd, uint16_t value);
-
-static volatile uint32_t g_debug_servo_keep = 0U;
-static void (* volatile g_debug_servo_fn)(uint32_t, uint8_t, uint16_t) = Debug_SendServoExt;
-
-static void Keep_Debug_SendServoExt_Symbol(void)
-{
-	if (g_debug_servo_keep && g_debug_servo_fn != NULL)
-	{
-		g_debug_servo_fn(0U, 0U, 0U);
-	}
-}
 
 /* USER CODE END 0 */
 
@@ -143,24 +131,23 @@ int main(void)
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
   
-  /* Initialize servo/ESC basic control protocol state (CAN extended frames) */
+  /* Initialize Ackermann servo/ESC control state */
   ServoBasic_Init();
-  Keep_Debug_SendServoExt_Symbol();
 	
-	//DWT定时器初始化,用于实现ms、us延时函数
+	//DWT瀹氭椂鍣ㄥ垵濮嬪寲,鐢ㄤ簬瀹炵幇ms銆乽s寤舵椂鍑芥暟
 	DWT_Init();
 
-	//ADC用户配置初始化
+	//ADC鐢ㄦ埛閰嶇疆鍒濆鍖?
 	ADC_Userconfig_Init();
 	
-	//启动FreeRTOS系统调试定时器
+	//鍚姩FreeRTOS绯荤粺璋冭瘯瀹氭椂鍣?
 	HAL_TIM_Base_Start(&htim6);
 	
-	//OLED屏幕初始化
+	//OLED灞忓箷鍒濆鍖?
 	pOLEDInterface_t oled = &UserOLED;
 	oled->init();
 	
-	//C63X硬件版本确定(通过版本io口,确认硬件版本)
+	//C63X纭欢鐗堟湰纭畾(閫氳繃鐗堟湰io鍙?纭纭欢鐗堟湰)
 	uint8_t Version = 0;
 	Version |= (HAL_GPIO_ReadPin(VersionBit2_GPIO_Port,VersionBit2_Pin))<<2;
 	Version |= (HAL_GPIO_ReadPin(VersionBit1_GPIO_Port,VersionBit1_Pin))<<1;
@@ -174,10 +161,10 @@ int main(void)
 	{
 		HardWareVersion = HW_1_0;
 		
-		//反初始化V2.0版本的CAN引脚
+		//鍙嶅垵濮嬪寲V2.0鐗堟湰鐨凜AN寮曡剼
 		HAL_GPIO_DeInit(GPIOD, GPIO_PIN_0|GPIO_PIN_1);
 		
-		//初始化V1.0版本CAN引脚
+		//鍒濆鍖朧1.0鐗堟湰CAN寮曡剼
 		GPIO_InitTypeDef GPIO_InitStruct = {0};
 		__HAL_RCC_GPIOA_CLK_ENABLE();
 		GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_12;
@@ -187,7 +174,7 @@ int main(void)
 		GPIO_InitStruct.Alternate = GPIO_AF9_CAN1;
 		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 		
-		//V1.0版本急停开关
+		//V1.0鐗堟湰鎬ュ仠寮€鍏?
 		HAL_GPIO_DeInit(ENKey_GPIO_Port,ENKey_Pin);
 		__HAL_RCC_GPIOD_CLK_ENABLE();
 		GPIO_InitStruct.Pin = ENKey_V1_0_Pin;
@@ -195,7 +182,7 @@ int main(void)
 		GPIO_InitStruct.Pull = GPIO_PULLUP;
 		HAL_GPIO_Init(ENKey_V1_0_GPIO_Port, &GPIO_InitStruct);
 		
-		//V1.0版本按键
+		//V1.0鐗堟湰鎸夐敭
 		HAL_GPIO_DeInit(UserKey_V1_0_Port,UserKey_V1_0_Pin);
 		HAL_GPIO_DeInit(UserKey_GPIO_Port,UserKey_Pin);
 		__HAL_RCC_GPIOD_CLK_ENABLE();
@@ -216,37 +203,37 @@ int main(void)
 		}
 	}
 	
-	//开启航模遥控相关定时器捕获功能
+	//寮€鍚埅妯￠仴鎺х浉鍏冲畾鏃跺櫒鎹曡幏鍔熻兘
 	HAL_TIM_IC_Start_IT(&htim4,TIM_CHANNEL_1);
 	HAL_TIM_IC_Start_IT(&htim4,TIM_CHANNEL_2);
 	HAL_TIM_IC_Start_IT(&htim4,TIM_CHANNEL_3);
 	
-	//启动串口接收中断
+	//鍚姩涓插彛鎺ユ敹涓柇
 	HAL_UART_Receive_IT(&huart2,&BlueToothBuffer,1);
 	HAL_UART_Receive_IT(&huart4,&rosbuffer,1);
 	HAL_UART_Receive_IT(&huart1,&usart1_buffer,1);
 	HAL_UART_Receive_IT(&huart3,&rs485_buffer,1);
 	
-	//485接口测试使用
+	//485鎺ュ彛娴嬭瘯浣跨敤
 //	uint8_t _485debug[] = {"hello c63x! RS485 Test Info"};
 //	HAL_UART_Transmit(&huart3,_485debug,sizeof(_485debug)/sizeof(_485debug[0]),500);
 	
-	//通过电位器确认车型
+	//閫氳繃鐢典綅鍣ㄧ‘璁よ溅鍨?
 	HAL_Delay(500);
 	Robot_Select();
 	
-	//读取用户保存的默认速度值
+	//璇诲彇鐢ㄦ埛淇濆瓨鐨勯粯璁ら€熷害鍊?
 	uint32_t flashdata[2];
 	User_Flash_ReadParam((uint32_t *)flashdata,2);
 	
-	//小车默认遥控速度值
+	//灏忚溅榛樿閬ユ帶閫熷害鍊?
 	if( flashdata[0]!=0xFFFFFFFF )
 	{
 		if( flashdata[0]<=3500 )
 			RobotControlParam.defalutSpeed = flashdata[0];
 	}
 	
-	//纠偏系数值
+	//绾犲亸绯绘暟鍊?
 	if( flashdata[1]!=0xFFFFFFFF )
 	{
 		if( flashdata[1]<=100 )
@@ -324,20 +311,20 @@ void SystemClock_Config(void)
 
 UART_HandleTypeDef *DebugSerial = &huart1;
 
-//printf函数实现
+//printf鍑芥暟瀹炵幇
 int fputc(int ch,FILE* stream)
 {
 	while( HAL_OK != HAL_UART_Transmit(DebugSerial,(const uint8_t *)&ch,1,100));
 	return ch;
 }
 
-//获取硬件版本
+//鑾峰彇纭欢鐗堟湰
 uint8_t get_HardWareVersion(void)
 {
 	return HardWareVersion;
 }
 
-//获取急停开关状态,与版本相关
+//鑾峰彇鎬ュ仠寮€鍏崇姸鎬?涓庣増鏈浉鍏?
 GPIO_PinState get_EnKeyState(void)
 {
 	if( HardWareVersion == HW_1_0 )
@@ -406,3 +393,5 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
+

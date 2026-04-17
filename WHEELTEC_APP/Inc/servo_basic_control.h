@@ -2,12 +2,6 @@
  * @file servo_basic_control.h
  * @brief Protocol adapter for servo/ESC control with RC override and Orin Ackermann mapping.
  *
- * CAN extended IDs accepted: 0x1314, 0x2568
- * Commands:
- *   0x53: set servo angle (degrees 0-180)
- *   0x50: set servo pulse by step (5us per step)
- *   0x45: set ESC pulse in microseconds (16-bit little endian)
- *
  * The module clamps inputs, supports RC takeover, and maps Orin (vx, vz)
  * commands into ESC/servo PWM via an Ackermann bicycle model.
  */
@@ -53,10 +47,6 @@ typedef struct
 } servo_basic_state_t;
 
 void ServoBasic_Init(void);
-void ServoBasic_HandleCanMessage(uint32_t can_id,
-								 uint8_t is_extended_id,
-								 const uint8_t *payload,
-								 uint8_t payload_len);
 void ServoBasic_ProcessControl(void);
 const servo_basic_state_t *ServoBasic_GetState(void);
 uint8_t ServoBasic_IsRcOverrideActive(void);

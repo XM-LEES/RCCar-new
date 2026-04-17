@@ -52,16 +52,7 @@ wheeltec\freertos.o: D:\Software\keil\ARM\ARMCC\Bin\..\include\stdio.h
 wheeltec\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 wheeltec\freertos.o: ../WHEELTEC_BSP/Inc/bsp_oled.h
 wheeltec\freertos.o: ../WHEELTEC_BSP/Inc/bsp_RTOSdebug.h
-wheeltec\freertos.o: ../WHEELTEC_BSP/Inc/bsp_ServoDrive.h
 wheeltec\freertos.o: ../WHEELTEC_BSP/Inc/bsp_RGBLight.h
-wheeltec\freertos.o: ../WHEELTEC_BSP/Inc/bsp_can.h
 wheeltec\freertos.o: ../WHEELTEC_BSP/Inc/bsp_buzzer.h
-wheeltec\freertos.o: ../WHEELTEC_APP/Inc/sensor_ranger.h
-wheeltec\freertos.o: D:\Software\keil\ARM\ARMCC\Bin\..\include\stdlib.h
-wheeltec\freertos.o: ../Core/Inc/tim.h
-wheeltec\freertos.o: ../Core/Inc/gpio.h
-wheeltec\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
-wheeltec\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
-wheeltec\freertos.o: ../WHEELTEC_BSP/Inc/bsp_dwt.h
 wheeltec\freertos.o: ../WHEELTEC_APP/Inc/robot_select_init.h
 wheeltec\freertos.o: ../WHEELTEC_APP/Inc/servo_basic_task.h

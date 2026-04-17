@@ -48,9 +48,8 @@ wheeltec\data_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/A
 wheeltec\data_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
 wheeltec\data_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 wheeltec\data_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+wheeltec\data_task.o: ../WHEELTEC_BSP/Inc/bsp_adc.h
 wheeltec\data_task.o: ../WHEELTEC_BSP/Inc/bsp_icm20948.h
-wheeltec\data_task.o: ../WHEELTEC_BSP/Inc/bsp_can.h
-wheeltec\data_task.o: ../WHEELTEC_APP/Inc/robot_select_init.h
 wheeltec\data_task.o: ../WHEELTEC_APP/Inc/sensor_ranger.h
 wheeltec\data_task.o: D:\Software\keil\ARM\ARMCC\Bin\..\include\stdio.h
 wheeltec\data_task.o: D:\Software\keil\ARM\ARMCC\Bin\..\include\stdlib.h
@@ -60,4 +59,5 @@ wheeltec\data_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_g
 wheeltec\data_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 wheeltec\data_task.o: ../WHEELTEC_BSP/Inc/bsp_dwt.h
 wheeltec\data_task.o: ../WHEELTEC_APP/Inc/AutoRecharge_task.h
+wheeltec\data_task.o: ../WHEELTEC_APP/Inc/robot_select_init.h
 wheeltec\data_task.o: ../WHEELTEC_APP/Inc/servo_basic_control.h

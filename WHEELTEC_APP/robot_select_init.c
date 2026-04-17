@@ -1,70 +1,46 @@
-#include "robot_select_init.h"
-#include "bsp_adc.h"
+ï»¿#include "robot_select_init.h"
 
-//¶¨Òå»úÆ÷ÈË²ÎÊý
-RobotParmentType_t RobotHardWareParam = { 0 };
+RobotParmentType_t RobotHardWareParam = {0};
 
-//»úÆ÷ÈËµÄ¿ØÖÆÈí¼þ²ÎÊý
-RobotControlParmentType_t RobotControlParam = { 
-	.en_flag = 1,          //Ð¡³µÊ¹ÄÜ±êÖ¾Î»
-	.ErrNum = 0,           //Ð¡³µ±¨´íÂë
-	.defalutSpeed = 500,   //Ð¡³µÄ¬ÈÏÒ£¿ØËÙ¶È,µ¥Î»mm/s
-	.ChargeMode = 0,       //×Ô¶¯»Ø³äÄ£Ê½×´Ì¬,Ä¬ÈÏ¹Ø±Õ
-	.EmergencyMode = 0,    //Ó¦¼±Ä£Ê½,Ä¬ÈÏ¹Ø±Õ
-	.softwareEnflag = 0,   //Èí¼þÊ¹ÄÜÎ»,Ä¬ÈÏÊ¹ÄÜ
-	.LineDiffParam = 50,   //¾ÀÆ«ÏµÊý,ÓÃÓÚµ÷Õû×ßÖ±ÏßÐ§¹û
-	.RangerAvoidEN = 0 ,   //³¬Éù²¨±ÜÕÏÎ»
-	.SecurityLevel = 0 ,   //°²È«µÈ¼¶,0Îª×î¸ß
-	.LowPowerFlag = 0  ,   //Ð¡³µµçÁ¿µÍ±êÖ¾Î» 1±íÊ¾µÍµçÁ¿
-	.ImuAssistedFlag = 1,  //Ä¬ÈÏÆôÓÃÐ¡³µ×ßÖ±ÏßÊ±ÓÃIMU¸¨Öú¹¦ÄÜ
-	.DebugLevel = 0        //µ÷ÊÔµÈ¼¶
+RobotControlParmentType_t RobotControlParam = {
+    .en_flag = 1,
+    .ErrNum = 0,
+    .defalutSpeed = 500,
+    .Vol = 0.0f,
+    .DriveErrRecovery = 0,
+    .ChargeMode = 0,
+    .SecurityLevel = 0,
+    .EmergencyMode = 0,
+    .softwareEnflag = 0,
+    .RangerAvoidEN = 0,
+    .LineDiffParam = 50,
+    .ImuAssistedFlag = 0,
+    .DebugLevel = 0,
+    .LedTickState = 0,
+    .LowPowerFlag = 0,
+    .ParkingMode = 0,
+    .feedbackVx = 0.0f,
+    .feedbackVy = 0.0f,
+    .feedbackVz = 0.0f,
 };
 
-static void Robot_Init(float wheelspacing,float axlespacing,float tyre_diameter,uint8_t WheelType);
+static void Robot_Init(float wheelspacing, float axlespacing, float tyre_diameter, uint8_t wheel_type)
+{
+    RobotHardWareParam.WheelSpacing = wheelspacing;
+    RobotHardWareParam.AxleSpacing = axlespacing;
+    RobotHardWareParam.WheelPerimeter = tyre_diameter * PI;
+    RobotHardWareParam.wheeltype = wheel_type;
+}
 
 void Robot_Select(void)
 {
-	//The ADC value is variable in segments, depending on the number of car models. Currently there are 6 car models, CAR_NUMBER=6
-	//ADCÖµ·Ö¶Î±äÁ¿£¬È¡¾öÓÚÐ¡³µÐÍºÅÊýÁ¿
-	uint16_t Divisor_Mode = 4095/(Number_of_CAR-1);
-	
-	//SÏµÁÐÔÝ¶¨0~5 ÁùÖÖ³µÐÍ
-	RobotHardWareParam.CarType = USER_ADC_Get_AdcBufValue(userconfigADC_CARMODE_CHANNEL)/Divisor_Mode; //Collect the pin information of potentiometer //²É¼¯µçÎ»Æ÷Òý½ÅÐÅÏ¢	
-	
-	//¸ù¾Ý³µÐÍÅäÖÃÉèÖÃ²»Í¬µÄ²ÎÊý:ÂÖ¾à¡¢Öá¾à¡¢ÂÖ×ÓÖ±¾¶¡¢ÂÖ×ÓÐÍºÅ
-	if( RobotHardWareParam.CarType == S300 )      Robot_Init(S300_Wheelspacing,0,S300_Diameter,DoubleAxis_8inch);
-	else if( RobotHardWareParam.CarType == S200 ) Robot_Init(S200_Wheelspacing,S200_axlespacing,S200_Diameter,SingleAxis_8inch);
-	else if( RobotHardWareParam.CarType == S300Mini ) Robot_Init(S150_Wheelspacing,0,S150_Diameter,DoubleAxis_5inch);
-	else if( RobotHardWareParam.CarType == S100 ) Robot_Init(S100_Wheelspacing,0,S100_Diameter,SingleAxis_5inch);
-	
-	//S260 6ÂÖ³µ,Ä£ÐÍÎª²îËÙ³µÐÍ
-	else if( RobotHardWareParam.CarType == S260 ) Robot_Init(S260_Wheelspacing,S260_axlespacing,S260_Diameter,SingleAxis_8inch);
-	
-	//»§Íâ°æS200
-	else if( RobotHardWareParam.CarType == S200_OUTDOOR ) Robot_Init(S200_OUTDOOR_Wheelspacing,S200_OUTDOOR_axlespacing,S200_OUTDOOR_Diameter,SingleAxis_8inch);
-	
-	
-	//Çý¶¯Æ÷µÄ¸öÊýÑ¡Ôñ,¸ù¾Ý³µÐÍ²»Í¬³õÊ¼»¯²»Í¬¸öÊýµÄÇý¶¯Æ÷
-	switch( RobotHardWareParam.CarType )
-	{
-		case S300:case S300Mini:case S100:
-			RobotHardWareParam.driveCounts=1;
-			break;
-		case S200:case S200_OUTDOOR:
-			RobotHardWareParam.driveCounts=2;
-			break;
-		case S260:
-			RobotHardWareParam.driveCounts=3;
-		default:
-			break;
-	}
+    /* Ackermann-only platform.
+     * Geometry comes from EXTRINSICS.md:
+     * track width = 0.48 m
+     * wheelbase   = 0.54 m
+     * wheel radius = 0.11 m
+     */
+    RobotHardWareParam.CarType = SX04;
+    RobotHardWareParam.driveCounts = 0U;
+    Robot_Init(0.48f, 0.54f, 0.22f, SingleAxis_8inch);
 }
-
-static void Robot_Init(float wheelspacing,float axlespacing,float tyre_diameter,uint8_t WheelType) 
-{
-	RobotHardWareParam.WheelSpacing = wheelspacing;
-	RobotHardWareParam.AxleSpacing = axlespacing;
-	RobotHardWareParam.WheelPerimeter = tyre_diameter*PI;
-	RobotHardWareParam.wheeltype = WheelType;
-}
-

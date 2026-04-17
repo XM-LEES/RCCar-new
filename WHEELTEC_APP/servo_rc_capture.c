@@ -7,6 +7,7 @@
 
 extern volatile uint32_t g_rc_valid_min_us;
 extern volatile uint32_t g_rc_valid_max_us;
+volatile uint32_t g_rc_capture_active_high = 1U;
 
 typedef struct
 {
@@ -20,6 +21,9 @@ typedef struct
 static servo_rc_channel_state_t g_rc_throttle = {0};
 static servo_rc_channel_state_t g_rc_steering = {0};
 static servo_rc_channel_state_t g_rc_guard = {0};
+
+static uint32_t rc_capture_first_polarity(void);
+static uint32_t rc_capture_second_polarity(void);
 
 void ServoRC_Capture_Init(void)
 {
@@ -40,6 +44,13 @@ void ServoRC_Capture_Init(void)
 	g_rc_guard.waiting_for_falling = 0U;
 	g_rc_guard.last_update_ms = 0U;
 	g_rc_guard.fault_active = 0U;
+
+	TIM_RESET_CAPTUREPOLARITY(&htim4, TIM_CHANNEL_1);
+	TIM_SET_CAPTUREPOLARITY(&htim4, TIM_CHANNEL_1, rc_capture_first_polarity());
+	TIM_RESET_CAPTUREPOLARITY(&htim4, TIM_CHANNEL_2);
+	TIM_SET_CAPTUREPOLARITY(&htim4, TIM_CHANNEL_2, rc_capture_first_polarity());
+	TIM_RESET_CAPTUREPOLARITY(&htim4, TIM_CHANNEL_3);
+	TIM_SET_CAPTUREPOLARITY(&htim4, TIM_CHANNEL_3, rc_capture_first_polarity());
 }
 
 uint16_t ServoRC_GetThrottlePulse(void)
@@ -94,6 +105,16 @@ static uint8_t rc_pulse_is_valid(uint32_t pulse_ticks)
 	return (pulse_ticks >= min_us && pulse_ticks <= max_us) ? 1U : 0U;
 }
 
+static uint32_t rc_capture_first_polarity(void)
+{
+	return (g_rc_capture_active_high != 0U) ? TIM_ICPOLARITY_RISING : TIM_ICPOLARITY_FALLING;
+}
+
+static uint32_t rc_capture_second_polarity(void)
+{
+	return (g_rc_capture_active_high != 0U) ? TIM_ICPOLARITY_FALLING : TIM_ICPOLARITY_RISING;
+}
+
 static void ServoRC_HandleChannel(servo_rc_channel_state_t *state,
 								  TIM_HandleTypeDef *htim,
 								  uint32_t channel)
@@ -107,7 +128,7 @@ static void ServoRC_HandleChannel(servo_rc_channel_state_t *state,
 		state->last_capture = captured;
 		state->waiting_for_falling = 1U;
 		TIM_RESET_CAPTUREPOLARITY(htim, channel);
-		TIM_SET_CAPTUREPOLARITY(htim, channel, TIM_ICPOLARITY_FALLING);
+		TIM_SET_CAPTUREPOLARITY(htim, channel, rc_capture_second_polarity());
 		return;
 	}
 
@@ -128,7 +149,7 @@ static void ServoRC_HandleChannel(servo_rc_channel_state_t *state,
 
 	state->waiting_for_falling = 0U;
 	TIM_RESET_CAPTUREPOLARITY(htim, channel);
-	TIM_SET_CAPTUREPOLARITY(htim, channel, TIM_ICPOLARITY_RISING);
+	TIM_SET_CAPTUREPOLARITY(htim, channel, rc_capture_first_polarity());
 }
 
 static uint8_t ServoRC_IsActive(const servo_rc_channel_state_t *state, uint32_t timeout_ms)

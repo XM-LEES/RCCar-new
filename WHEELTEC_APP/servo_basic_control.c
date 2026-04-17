@@ -6,9 +6,7 @@
 #include "servo_basic_control.h"
 #include <stddef.h>
 #include <math.h>
-#include <string.h>
 #include "FreeRTOS.h"
-#include "queue.h"
 #include "task.h"
 #include "servo_rc_capture.h"
 
@@ -37,6 +35,7 @@ static servo_basic_state_t g_state = {
 #define ORIN_ACKERMANN_MAX_STEERING_DEFAULT_MRAD  393U
 #define ORIN_ACKERMANN_MIN_VX_DEFAULT_MMPS         50U
 #define ORIN_VX_SCALE_DEFAULT_PERMILLE           1000U
+#define ORIN_FEEDBACK_SCALE_DEFAULT_PERMILLE     1254U
 #define ORIN_VX_FORWARD_CAP_DEFAULT_MMPS         2000U
 #define ORIN_VX_REVERSE_CAP_DEFAULT_MMPS         2000U
 #define ORIN_VX_DEADBAND_DEFAULT_MMPS              50U
@@ -73,6 +72,7 @@ volatile uint32_t g_orin_ackermann_wheel_radius_mm = ORIN_ACKERMANN_WHEEL_RADIUS
 volatile uint32_t g_orin_ackermann_max_steering_millirad = ORIN_ACKERMANN_MAX_STEERING_DEFAULT_MRAD;
 volatile uint32_t g_orin_ackermann_min_vx_mmps = ORIN_ACKERMANN_MIN_VX_DEFAULT_MMPS;
 volatile uint32_t g_orin_vx_scale = ORIN_VX_SCALE_DEFAULT_PERMILLE;
+volatile uint32_t g_orin_feedback_scale = ORIN_FEEDBACK_SCALE_DEFAULT_PERMILLE;
 volatile uint32_t g_orin_vx_forward_cap_mmps = ORIN_VX_FORWARD_CAP_DEFAULT_MMPS;
 volatile uint32_t g_orin_vx_reverse_cap_mmps = ORIN_VX_REVERSE_CAP_DEFAULT_MMPS;
 volatile uint32_t g_orin_vx_deadband_mmps = ORIN_VX_DEADBAND_DEFAULT_MMPS;
@@ -117,13 +117,6 @@ volatile uint32_t g_rc_input_fault_active = 0U;
 
 typedef struct
 {
-	uint32_t can_id;
-	uint8_t payload_len;
-	uint8_t payload[8];
-} servo_basic_msg_t;
-
-typedef struct
-{
 	uint16_t esc_pulse_us;
 	uint16_t servo_pulse_us;
 	uint32_t last_update_ms;
@@ -146,7 +139,6 @@ typedef struct
 	uint8_t stable_present;
 } rc_channel_filter_state_t;
 
-static QueueHandle_t g_servo_basic_queue = NULL;
 static orin_pwm_state_t g_orin_state = {
 	ESC_PWM_NEUTRAL_PULSE_US,
 	ESC_PWM_NEUTRAL_PULSE_US,
@@ -176,6 +168,7 @@ static uint16_t limit_servo_safe_pulse(uint16_t pulse_us);
 static uint32_t get_rc_override_center_us(void);
 static uint8_t pulse_is_inside_center(uint16_t pulse_us, uint32_t center_us, uint32_t threshold_us);
 static uint8_t orin_pwm_is_active(void);
+static void servo_basic_apply_debug_command(uint32_t cmd, uint32_t value);
 
 __attribute__((weak)) void ServoBasic_OutputEscPulse(uint16_t pulse_us)
 {
@@ -537,6 +530,16 @@ static uint32_t get_orin_vx_scale_permille(void)
 	return (g_orin_vx_scale == 0U) ? ORIN_VX_SCALE_DEFAULT_PERMILLE : g_orin_vx_scale;
 }
 
+static uint32_t get_orin_feedback_scale_permille(void)
+{
+	return (g_orin_feedback_scale == 0U) ? ORIN_FEEDBACK_SCALE_DEFAULT_PERMILLE : g_orin_feedback_scale;
+}
+
+static float scale_telemetry_feedback(float value)
+{
+	return value * ((float)get_orin_feedback_scale_permille() / 1000.0f);
+}
+
 static uint32_t get_orin_vx_forward_cap_mmps(void)
 {
 	if (g_orin_vx_forward_cap_mmps != 0U)
@@ -837,7 +840,7 @@ static uint8_t rc_inputs_are_centered(void)
 
 static uint8_t rc_passthrough_is_available(void)
 {
-	return (g_rc_throttle_present != 0U && g_rc_steering_present != 0U) ? 1U : 0U;
+	return (g_rc_throttle_present != 0U || g_rc_steering_present != 0U) ? 1U : 0U;
 }
 
 static void set_rc_override_state(uint8_t override_active, uint8_t guard_active)
@@ -1282,15 +1285,13 @@ static void update_control_mode_from_rc(void)
 
 static void apply_rc_passthrough_outputs(void)
 {
-	if (g_rc_throttle_present == 0U || g_rc_steering_present == 0U)
-	{
-		apply_esc_pulse(get_orin_esc_center_pulse());
-		apply_servo_pulse(get_orin_servo_center_pulse());
-		return;
-	}
+	const uint16_t esc_pulse = (g_rc_throttle_present != 0U) ?
+		rc_select_pulse(g_rc_throttle_current, 1U) : get_orin_esc_center_pulse();
+	const uint16_t servo_pulse = (g_rc_steering_present != 0U) ?
+		rc_select_pulse(g_rc_steering_current, 0U) : get_orin_servo_center_pulse();
 
-	apply_esc_pulse(rc_select_pulse(g_rc_throttle_current, 1U));
-	apply_servo_pulse(rc_select_pulse(g_rc_steering_current, 0U));
+	apply_esc_pulse(esc_pulse);
+	apply_servo_pulse(servo_pulse);
 }
 
 static void apply_autonomous_outputs(void)
@@ -1344,65 +1345,22 @@ void ServoBasic_ProcessControl(void)
 	}
 }
 
-void ServoBasic_TaskInit(void)
-{
-	if (g_servo_basic_queue == NULL)
-	{
-		g_servo_basic_queue = xQueueCreate(8U, sizeof(servo_basic_msg_t));
-	}
-}
-
-BaseType_t ServoBasic_EnqueueCanMessageFromISR(uint32_t can_id,
-											   const uint8_t *payload,
-											   uint8_t payload_len,
-											   BaseType_t *pxHigherPriorityTaskWoken)
-{
-	if (g_servo_basic_queue == NULL || payload == NULL)
-	{
-		return pdFAIL;
-	}
-
-	servo_basic_msg_t msg;
-	msg.can_id = can_id;
-	msg.payload_len = (payload_len > 8U) ? 8U : payload_len;
-	memcpy(msg.payload, payload, msg.payload_len);
-
-	return xQueueSendFromISR(g_servo_basic_queue, &msg, pxHigherPriorityTaskWoken);
-}
-
 void ServoBasic_Task(void *param)
 {
 	(void)param;
 
-	servo_basic_msg_t msg;
 	TickType_t last_wake = xTaskGetTickCount();
 	const TickType_t period_ticks = pdMS_TO_TICKS(20U);
 	for (;;)
 	{
 		if (g_debug_servo_trigger != 0U)
 		{
-			uint8_t payload[3];
-			uint8_t payload_len = 2U;
 			const uint32_t cmd = g_debug_servo_cmd;
 			const uint32_t value = g_debug_servo_value;
-			const uint32_t can_id = g_debug_servo_can_id;
 
 			g_debug_servo_trigger = 0U;
-
-			payload[0] = (uint8_t)cmd;
-			payload[1] = (uint8_t)value;
-			if (cmd == SERVO_CMD_SET_ESC_PULSE)
-			{
-				payload_len = 3U;
-				payload[2] = (uint8_t)(value >> 8);
-			}
-
-			ServoBasic_HandleCanMessage(can_id, 1U, payload, payload_len);
-		}
-
-		while (xQueueReceive(g_servo_basic_queue, &msg, 0U) == pdPASS)
-		{
-			ServoBasic_HandleCanMessage(msg.can_id, 1U, msg.payload, msg.payload_len);
+			(void)g_debug_servo_can_id;
+			servo_basic_apply_debug_command(cmd, value);
 		}
 
 		ServoBasic_ProcessControl();
@@ -1410,57 +1368,35 @@ void ServoBasic_Task(void *param)
 	}
 }
 
-static uint8_t is_valid_can_id(uint32_t can_id)
+static void servo_basic_apply_debug_command(uint32_t cmd, uint32_t value)
 {
-	return (can_id == SERVO_CAN_ID_0) || (can_id == SERVO_CAN_ID_1);
-}
-
-void ServoBasic_HandleCanMessage(uint32_t can_id,
-								 uint8_t is_extended_id,
-								 const uint8_t *payload,
-								 uint8_t payload_len)
-{
-	if (!is_extended_id || !is_valid_can_id(can_id) || payload == NULL || payload_len == 0U) // BP: ServoBasic_HandleCanMessage entry guard
-	{
-		return;
-	}
-
-	if (payload_len > 8U)
-	{
-		payload_len = 8U;
-	}
-
-	switch (payload[0])
+	switch (cmd)
 	{
 	case SERVO_CMD_SET_SERVO_ANGLE:
-		if (payload_len >= 2U)
-		{
-			const uint16_t angle = clamp_servo_angle(payload[1]);
-			const uint16_t pulse = servo_angle_to_pulse(angle);
-			set_servo_target(pulse); // BP: apply servo angle -> pulse
-			SERVO_BASIC_LOG("servo angle=%u, pulse=%u\n", (unsigned int)angle, (unsigned int)pulse);
-		}
+	{
+		const uint16_t angle = clamp_servo_angle((uint16_t)value);
+		const uint16_t pulse = servo_angle_to_pulse(angle);
+		set_servo_target(pulse);
+		SERVO_BASIC_LOG("debug servo angle=%u, pulse=%u\n", (unsigned int)angle, (unsigned int)pulse);
 		break;
+	}
 
 	case SERVO_CMD_SET_SERVO_PULSE:
-		if (payload_len >= 2U)
-		{
-			const uint8_t step = clamp_servo_step(payload[1]);
-			const uint16_t pulse = servo_step_to_pulse(step);
-			set_servo_target(pulse); // BP: apply servo step -> pulse
-			SERVO_BASIC_LOG("servo step=%u, pulse=%u\n", (unsigned int)step, (unsigned int)pulse);
-		}
+	{
+		const uint8_t step = clamp_servo_step((uint16_t)value);
+		const uint16_t pulse = servo_step_to_pulse(step);
+		set_servo_target(pulse);
+		SERVO_BASIC_LOG("debug servo step=%u, pulse=%u\n", (unsigned int)step, (unsigned int)pulse);
 		break;
+	}
 
 	case SERVO_CMD_SET_ESC_PULSE:
-		if (payload_len >= 3U)
-		{
-			const uint16_t raw = (uint16_t)payload[1] | ((uint16_t)payload[2] << 8);
-			const uint16_t pulse = clamp_esc_pulse(raw);
-			set_esc_target(pulse); // BP: apply esc pulse
-			SERVO_BASIC_LOG("esc pulse=%u\n", (unsigned int)pulse);
-		}
+	{
+		const uint16_t pulse = clamp_esc_pulse((uint16_t)value);
+		set_esc_target(pulse);
+		SERVO_BASIC_LOG("debug esc pulse=%u\n", (unsigned int)pulse);
 		break;
+	}
 
 	default:
 		break;
@@ -1486,30 +1422,15 @@ uint8_t ServoBasic_GetOrinFeedback(float *vx_mps, float *vy_mps, float *vz_rad_s
 {
 	float feedback_vx = 0.0f;
 	float feedback_vz = 0.0f;
-	const uint8_t command_feedback_active = (g_orin_state.stop == 0U && orin_pwm_is_active() != 0U) ? 1U : 0U;
 
-	if (command_feedback_active != 0U &&
-		(fabsf(g_orin_state.feedback_vx_mps) >= 0.001f || fabsf(g_orin_state.feedback_vz_rad_s) >= 0.001f))
+	if (telemetry_pwm_feedback_is_valid() == 0U)
 	{
-		feedback_vx = g_orin_state.feedback_vx_mps;
-		feedback_vz = g_orin_state.feedback_vz_rad_s;
+		return 0U;
 	}
-	else
-	{
-		if (telemetry_pwm_feedback_is_valid() == 0U)
-		{
-			return 0U;
-		}
 
-		feedback_vx = telemetry_estimate_vx_from_esc_pulse(g_state.esc_pulse_us);
-		feedback_vz = telemetry_estimate_vz_from_pwm(feedback_vx, g_state.servo_pulse_us);
-
-		if (fabsf(feedback_vx) < 0.001f && fabsf(feedback_vz) < 0.001f && command_feedback_active != 0U)
-		{
-			feedback_vx = g_orin_state.feedback_vx_mps;
-			feedback_vz = g_orin_state.feedback_vz_rad_s;
-		}
-	}
+	feedback_vx = telemetry_estimate_vx_from_esc_pulse(g_state.esc_pulse_us);
+	feedback_vx = scale_telemetry_feedback(feedback_vx);
+	feedback_vz = telemetry_estimate_vz_from_pwm(feedback_vx, g_state.servo_pulse_us);
 
 	if (vx_mps != NULL)
 	{

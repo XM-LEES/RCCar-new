@@ -13,7 +13,6 @@ wheeltec\serialcontrol_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/includ
 wheeltec\serialcontrol_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 wheeltec\serialcontrol_task.o: ../WHEELTEC_BSP/Inc/bsp_RGBLight.h
 wheeltec\serialcontrol_task.o: ../WHEELTEC_APP/Inc/robot_select_init.h
-wheeltec\serialcontrol_task.o: ../WHEELTEC_APP/Inc/RobotControl_task.h
-wheeltec\serialcontrol_task.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 wheeltec\serialcontrol_task.o: ../WHEELTEC_APP/Inc/RGBStripControl_task.h
 wheeltec\serialcontrol_task.o: ../WHEELTEC_APP/Inc/servo_basic_control.h
+wheeltec\serialcontrol_task.o: ../WHEELTEC_APP/Inc/RobotControl_task.h

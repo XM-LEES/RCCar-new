@@ -16,7 +16,6 @@ wheeltec\autorecharge_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include
 wheeltec\autorecharge_task.o: ../WHEELTEC_BSP/Inc/bsp_can.h
 wheeltec\autorecharge_task.o: ../WHEELTEC_BSP/Inc/bsp_RTOSdebug.h
 wheeltec\autorecharge_task.o: ../WHEELTEC_APP/Inc/RobotControl_task.h
-wheeltec\autorecharge_task.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 wheeltec\autorecharge_task.o: ../WHEELTEC_APP/Inc/robot_select_init.h
 wheeltec\autorecharge_task.o: ../WHEELTEC_APP/Inc/sensor_ranger.h
 wheeltec\autorecharge_task.o: D:\Software\keil\ARM\ARMCC\Bin\..\include\stdlib.h
@@ -31,6 +30,7 @@ wheeltec\autorecharge_task.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32
 wheeltec\autorecharge_task.o: ../Drivers/CMSIS/Include/core_cm4.h
 wheeltec\autorecharge_task.o: ../Drivers/CMSIS/Include/cmsis_version.h
 wheeltec\autorecharge_task.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+wheeltec\autorecharge_task.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 wheeltec\autorecharge_task.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 wheeltec\autorecharge_task.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
 wheeltec\autorecharge_task.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h

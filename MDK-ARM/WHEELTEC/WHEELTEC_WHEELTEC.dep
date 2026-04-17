@@ -2,7 +2,7 @@ Dependencies for Project 'WHEELTEC', Target 'WHEELTEC': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
 F (..\¸üÐÂ¼ÇÂ¼.txt)(0x68FAE62B)()
 F (startup_stm32f407xx.s)(0x69709A67)(--cpu Cortex-M4.fp.sp -g --apcs=interwork --pd "__MICROLIB SETA 1" -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include--pd "__UVISION_VERSION SETA 535" --pd "_RTE_ SETA 1" --pd "STM32F407xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f407xx.lst --xref -o wheeltec\startup_stm32f407xx.o --depend wheeltec\startup_stm32f407xx.d)
-F (../Core/Src/main.c)(0x69D8F621)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\main.o --omf_browse wheeltec\main.crf --depend wheeltec\main.d)
+F (../Core/Src/main.c)(0x69E0C90E)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\main.o --omf_browse wheeltec\main.crf --depend wheeltec\main.d)
 I (../Core/Inc/main.h)(0x68F73565)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6946784A)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6946790C)
@@ -64,7 +64,7 @@ I (../WHEELTEC_BSP/Inc/bsp_dwt.h)(0x67F8C4A4)
 I (../WHEELTEC_BSP/Inc/bsp_can.h)(0x686F903B)
 I (../WHEELTEC_BSP/Inc/bsp_adc.h)(0x686C8CD6)
 I (../WHEELTEC_BSP/Inc/bsp_flash.h)(0x6878BA7E)
-I (../WHEELTEC_APP/Inc/servo_basic_control.h)(0x69D8F20E)
+I (../WHEELTEC_APP/Inc/servo_basic_control.h)(0x69E0C598)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
 F (../Core/Src/gpio.c)(0x697090B3)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\gpio.o --omf_browse wheeltec\gpio.crf --depend wheeltec\gpio.d)
 I (../Core/Inc/gpio.h)(0x68661F4C)
@@ -105,7 +105,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x6946784A)
-F (../Core/Src/freertos.c)(0x69708F21)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\freertos.o --omf_browse wheeltec\freertos.crf --depend wheeltec\freertos.d)
+F (../Core/Src/freertos.c)(0x69E0F659)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\freertos.o --omf_browse wheeltec\freertos.crf --depend wheeltec\freertos.d)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x6946784F)
 I (D:\Software\keil\ARM\ARMCC\include\stddef.h)(0x6025237E)
 I (D:\Software\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
@@ -158,19 +158,10 @@ I (D:\Software\keil\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
 I (../WHEELTEC_BSP/Inc/bsp_oled.h)(0x6870C648)
 I (../WHEELTEC_BSP/Inc/bsp_RTOSdebug.h)(0x68662987)
-I (../WHEELTEC_BSP/Inc/bsp_ServoDrive.h)(0x6877603E)
 I (../WHEELTEC_BSP/Inc/bsp_RGBLight.h)(0x68F7239E)
-I (../WHEELTEC_BSP/Inc/bsp_can.h)(0x686F903B)
 I (../WHEELTEC_BSP/Inc/bsp_buzzer.h)(0x6878B58E)
-I (../WHEELTEC_APP/Inc/sensor_ranger.h)(0x686C94A6)
-I (D:\Software\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
-I (../Core/Inc/tim.h)(0x69709A63)
-I (../Core/Inc/gpio.h)(0x68661F4C)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x6946784F)
-I (../WHEELTEC_BSP/Inc/bsp_dwt.h)(0x67F8C4A4)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
-I (../WHEELTEC_APP/Inc/servo_basic_task.h)(0x6946B696)
+I (../WHEELTEC_APP/Inc/servo_basic_task.h)(0x69E0C5A3)
 F (../Core/Src/adc.c)(0x686C8DD5)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\adc.o --omf_browse wheeltec\adc.crf --depend wheeltec\adc.d)
 I (../Core/Inc/adc.h)(0x686C89FC)
 I (../Core/Inc/main.h)(0x68F73565)
@@ -288,7 +279,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x6946784A)
-F (../Core/Src/tim.c)(0x69D8BD2D)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\tim.o --omf_browse wheeltec\tim.crf --depend wheeltec\tim.d)
+F (../Core/Src/tim.c)(0x69E0EC21)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\tim.o --omf_browse wheeltec\tim.crf --depend wheeltec\tim.d)
 I (../Core/Inc/tim.h)(0x69709A63)
 I (../Core/Inc/main.h)(0x68F73565)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6946784A)
@@ -1991,8 +1982,8 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
 I (../WHEELTEC_BSP/Inc/bsp_can.h)(0x686F903B)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
-F (..\WHEELTEC_APP\RobotControl_task.c)(0x68FB1B6D)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\robotcontrol_task.o --omf_browse wheeltec\robotcontrol_task.crf --depend wheeltec\robotcontrol_task.d)
-I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x68F73E6B)
+F (..\WHEELTEC_APP\RobotControl_task.c)(0x69E0E001)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\robotcontrol_task.o --omf_browse wheeltec\robotcontrol_task.crf --depend wheeltec\robotcontrol_task.d)
+I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x69E0DFF6)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x6946784F)
 I (D:\Software\keil\ARM\ARMCC\include\stddef.h)(0x6025237E)
 I (D:\Software\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
@@ -2005,7 +1996,6 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x6946784F
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x6946784A)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
 I (../Core/Inc/main.h)(0x68F73565)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6946784A)
@@ -2017,6 +2007,7 @@ I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h)(0x6946783F)
 I (../Drivers/CMSIS/Include/core_cm4.h)(0x6946784A)
 I (../Drivers/CMSIS/Include/cmsis_version.h)(0x6946784A)
 I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x6946784A)
+I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x6946784A)
 I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x6946784A)
 I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h)(0x6946783F)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x6946784A)
@@ -2041,38 +2032,8 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x6946784A)
-I (D:\Software\keil\ARM\ARMCC\include\stdio.h)(0x60252374)
-I (D:\Software\keil\ARM\ARMCC\include\math.h)(0x60252378)
-I (../WHEELTEC_BSP/Inc/bsp_adc.h)(0x686C8CD6)
-I (../WHEELTEC_BSP/Inc/bsp_ServoDrive.h)(0x6877603E)
-I (../WHEELTEC_BSP/Inc/bsp_RTOSdebug.h)(0x68662987)
-I (../WHEELTEC_BSP/Inc/bsp_icm20948.h)(0x6874FDD8)
-I (../WHEELTEC_BSP/Inc/bsp_RGBLight.h)(0x68F7239E)
 I (../WHEELTEC_BSP/Inc/bsp_buzzer.h)(0x6878B58E)
-I (../WHEELTEC_APP/Inc/sensor_ranger.h)(0x686C94A6)
-I (D:\Software\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
-I (../Core/Inc/tim.h)(0x69709A63)
-I (../Core/Inc/gpio.h)(0x68661F4C)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x6946784F)
-I (../WHEELTEC_BSP/Inc/bsp_dwt.h)(0x67F8C4A4)
-I (../USB_HOST/App/xbox360_gamepad.h)(0x6808AF2B)
-I (../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc/usbh_hid.h)(0x6946784C)
-I (../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h)(0x6946784D)
-I (../USB_HOST/Target/usbh_conf.h)(0x68F83F98)
-I (D:\Software\keil\ARM\ARMCC\include\string.h)(0x6025237E)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h)(0x6946784F)
-I (../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h)(0x6946784D)
-I (../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h)(0x6946784D)
-I (../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h)(0x6946784D)
-I (../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h)(0x6946784D)
-I (../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc/usbh_hid_mouse.h)(0x6946784C)
-I (../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc/usbh_hid_keybd.h)(0x6946784C)
-I (../USB_HOST/App/usbh_hid_GamePad.h)(0x6811DD3C)
-I (../WHEELTEC_BSP/Inc/bsp_gamepad.h)(0x6811DB09)
-I (../WHEELTEC_APP/Inc/show_task.h)(0x68F779B7)
-F (..\WHEELTEC_APP\SerialControl_task.c)(0x69C68D1E)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\serialcontrol_task.o --omf_browse wheeltec\serialcontrol_task.crf --depend wheeltec\serialcontrol_task.d)
+F (..\WHEELTEC_APP\SerialControl_task.c)(0x69E0C612)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\serialcontrol_task.o --omf_browse wheeltec\serialcontrol_task.crf --depend wheeltec\serialcontrol_task.d)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x6946784F)
 I (D:\Software\keil\ARM\ARMCC\include\stddef.h)(0x6025237E)
 I (D:\Software\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
@@ -2087,10 +2048,9 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
 I (../WHEELTEC_BSP/Inc/bsp_RGBLight.h)(0x68F7239E)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
-I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x68F73E6B)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x6946784A)
 I (../WHEELTEC_APP/Inc/RGBStripControl_task.h)(0x68F72A39)
-I (../WHEELTEC_APP/Inc/servo_basic_control.h)(0x69D8F20E)
+I (../WHEELTEC_APP/Inc/servo_basic_control.h)(0x69E0C598)
+I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x69E0DFF6)
 F (..\WHEELTEC_APP\imu_task.c)(0x68EA2989)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\imu_task.o --omf_browse wheeltec\imu_task.crf --depend wheeltec\imu_task.d)
 I (../WHEELTEC_BSP/Inc/bsp_icm20948.h)(0x6874FDD8)
 I (D:\Software\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
@@ -2157,7 +2117,7 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x6946784F
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
 I (../WHEELTEC_BSP/Inc/bsp_RTOSdebug.h)(0x68662987)
-I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x68F73E6B)
+I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x69E0DFF6)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
 F (..\WHEELTEC_APP\BlueTooth_task.c)(0x68F98C6F)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\bluetooth_task.o --omf_browse wheeltec\bluetooth_task.crf --depend wheeltec\bluetooth_task.d)
@@ -2217,7 +2177,7 @@ I (../WHEELTEC_BSP/Inc/bsp_ServoDrive.h)(0x6877603E)
 I (../WHEELTEC_BSP/Inc/bsp_flash.h)(0x6878BA7E)
 I (../WHEELTEC_BSP/Inc/bsp_buzzer.h)(0x6878B58E)
 I (../WHEELTEC_BSP/Inc/bsp_icm20948.h)(0x6874FDD8)
-I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x68F73E6B)
+I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x69E0DFF6)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
 I (../WHEELTEC_APP/Inc/show_task.h)(0x68F779B7)
 F (..\WHEELTEC_APP\appshow_task.c)(0x68F83617)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\appshow_task.o --omf_browse wheeltec\appshow_task.crf --depend wheeltec\appshow_task.d)
@@ -2274,9 +2234,9 @@ I (../WHEELTEC_BSP/Inc/bsp_ServoDrive.h)(0x6877603E)
 I (../WHEELTEC_BSP/Inc/bsp_icm20948.h)(0x6874FDD8)
 I (../WHEELTEC_APP/Inc/BlueTooth_task.h)(0x68763B96)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
-I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x68F73E6B)
+I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x69E0DFF6)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
-F (..\WHEELTEC_APP\show_task.c)(0x68F9FE0C)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\show_task.o --omf_browse wheeltec\show_task.crf --depend wheeltec\show_task.d)
+F (..\WHEELTEC_APP\show_task.c)(0x69E0C726)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\show_task.o --omf_browse wheeltec\show_task.crf --depend wheeltec\show_task.d)
 I (../WHEELTEC_APP/Inc/show_task.h)(0x68F779B7)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x6946784F)
 I (D:\Software\keil\ARM\ARMCC\include\stddef.h)(0x6025237E)
@@ -2290,76 +2250,11 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x6946784F
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
 I (../WHEELTEC_BSP/Inc/bsp_oled.h)(0x6870C648)
-I (../WHEELTEC_BSP/Inc/bsp_gamepad.h)(0x6811DB09)
-I (../WHEELTEC_BSP/Inc/bsp_key.h)(0x68677D89)
-I (../WHEELTEC_BSP/Inc/bsp_RTOSdebug.h)(0x68662987)
 I (../WHEELTEC_BSP/Inc/bsp_adc.h)(0x686C8CD6)
 I (../WHEELTEC_BSP/Inc/bsp_icm20948.h)(0x6874FDD8)
-I (../WHEELTEC_BSP/Inc/bsp_RGBLight.h)(0x68F7239E)
-I (../WHEELTEC_BSP/Inc/bsp_ServoDrive.h)(0x6877603E)
-I (../WHEELTEC_APP/Inc/sensor_ranger.h)(0x686C94A6)
-I (D:\Software\keil\ARM\ARMCC\include\stdio.h)(0x60252374)
-I (D:\Software\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
-I (../Core/Inc/tim.h)(0x69709A63)
-I (../Core/Inc/main.h)(0x68F73565)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6946784A)
-I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6946790C)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h)(0x6946784A)
-I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h)(0x6946783F)
-I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h)(0x6946783F)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x6946784A)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x6946784A)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x6946784A)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x6946784A)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x6946784A)
-I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h)(0x6946783F)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h)(0x6946784A)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x6946784A)
-I (../Core/Inc/gpio.h)(0x68661F4C)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x6946784F)
-I (../WHEELTEC_BSP/Inc/bsp_dwt.h)(0x67F8C4A4)
-I (../USB_HOST/App/xbox360_gamepad.h)(0x6808AF2B)
-I (../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc/usbh_hid.h)(0x6946784C)
-I (../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h)(0x6946784D)
-I (../USB_HOST/Target/usbh_conf.h)(0x68F83F98)
-I (D:\Software\keil\ARM\ARMCC\include\string.h)(0x6025237E)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h)(0x6946784F)
-I (../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h)(0x6946784D)
-I (../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h)(0x6946784D)
-I (../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h)(0x6946784D)
-I (../Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h)(0x6946784D)
-I (../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc/usbh_hid_mouse.h)(0x6946784C)
-I (../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc/usbh_hid_keybd.h)(0x6946784C)
-I (../USB_HOST/App/usbh_hid_GamePad.h)(0x6811DD3C)
-I (../WHEELTEC_APP/Inc/rc_joystick.h)(0x6870BDB7)
-I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x68F73E6B)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
-I (../WHEELTEC_APP/Inc/AutoRecharge_task.h)(0x68789396)
-F (..\WHEELTEC_APP\data_task.c)(0x69D9020E)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\data_task.o --omf_browse wheeltec\data_task.crf --depend wheeltec\data_task.d)
+I (../WHEELTEC_APP/Inc/servo_basic_control.h)(0x69E0C598)
+F (..\WHEELTEC_APP\data_task.c)(0x69E0F86D)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\data_task.o --omf_browse wheeltec\data_task.crf --depend wheeltec\data_task.d)
 I (../Core/Inc/usart.h)(0x689EE35E)
 I (../Core/Inc/main.h)(0x68F73565)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6946784A)
@@ -2408,9 +2303,8 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
+I (../WHEELTEC_BSP/Inc/bsp_adc.h)(0x686C8CD6)
 I (../WHEELTEC_BSP/Inc/bsp_icm20948.h)(0x6874FDD8)
-I (../WHEELTEC_BSP/Inc/bsp_can.h)(0x686F903B)
-I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
 I (../WHEELTEC_APP/Inc/sensor_ranger.h)(0x686C94A6)
 I (D:\Software\keil\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (D:\Software\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
@@ -2420,8 +2314,9 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x6946784F
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x6946784F)
 I (../WHEELTEC_BSP/Inc/bsp_dwt.h)(0x67F8C4A4)
 I (../WHEELTEC_APP/Inc/AutoRecharge_task.h)(0x68789396)
-I (../WHEELTEC_APP/Inc/servo_basic_control.h)(0x69D8F20E)
-F (..\WHEELTEC_APP\sensor_ranger.c)(0x68F835F7)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\sensor_ranger.o --omf_browse wheeltec\sensor_ranger.crf --depend wheeltec\sensor_ranger.d)
+I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
+I (../WHEELTEC_APP/Inc/servo_basic_control.h)(0x69E0C598)
+F (..\WHEELTEC_APP\sensor_ranger.c)(0x69E0F5ED)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\sensor_ranger.o --omf_browse wheeltec\sensor_ranger.crf --depend wheeltec\sensor_ranger.d)
 I (../WHEELTEC_APP/Inc/sensor_ranger.h)(0x686C94A6)
 I (D:\Software\keil\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (D:\Software\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
@@ -2494,8 +2389,7 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
 I (../WHEELTEC_BSP/Inc/bsp_can.h)(0x686F903B)
 I (../WHEELTEC_BSP/Inc/bsp_RTOSdebug.h)(0x68662987)
-I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x68F73E6B)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x6946784A)
+I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x69E0DFF6)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
 I (../WHEELTEC_APP/Inc/sensor_ranger.h)(0x686C94A6)
 I (D:\Software\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
@@ -2510,6 +2404,7 @@ I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h)(0x6946783F)
 I (../Drivers/CMSIS/Include/core_cm4.h)(0x6946784A)
 I (../Drivers/CMSIS/Include/cmsis_version.h)(0x6946784A)
 I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x6946784A)
+I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x6946784A)
 I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x6946784A)
 I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h)(0x6946783F)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x6946784A)
@@ -2649,18 +2544,26 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x6946784F
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
 I (../WHEELTEC_BSP/Inc/bsp_ServoDrive.h)(0x6877603E)
-I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x68F73E6B)
+I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x69E0DFF6)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
 I (../WHEELTEC_APP/Inc/AutoRecharge_task.h)(0x68789396)
-F (..\WHEELTEC_APP\robot_select_init.c)(0x68FAE438)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\robot_select_init.o --omf_browse wheeltec\robot_select_init.crf --depend wheeltec\robot_select_init.d)
+F (..\WHEELTEC_APP\robot_select_init.c)(0x69E0C644)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\robot_select_init.o --omf_browse wheeltec\robot_select_init.crf --depend wheeltec\robot_select_init.d)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
 I (D:\Software\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
-I (../WHEELTEC_BSP/Inc/bsp_adc.h)(0x686C8CD6)
-F (..\WHEELTEC_APP\tim_capture_callback.c)(0x6947D30A)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\tim_capture_callback.o --omf_browse wheeltec\tim_capture_callback.crf --depend wheeltec\tim_capture_callback.d)
-I (../WHEELTEC_APP/Inc/sensor_ranger.h)(0x686C94A6)
-I (D:\Software\keil\ARM\ARMCC\include\stdio.h)(0x60252374)
-I (D:\Software\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
+F (..\WHEELTEC_APP\tim_capture_callback.c)(0x69E0F674)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\tim_capture_callback.o --omf_browse wheeltec\tim_capture_callback.crf --depend wheeltec\tim_capture_callback.d)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x6946784F)
+I (D:\Software\keil\ARM\ARMCC\include\stddef.h)(0x6025237E)
+I (D:\Software\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
+I (../Core/Inc/FreeRTOSConfig.h)(0x68706681)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x6946784F)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x6946784F)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x6946784F)
+I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x6946784F)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x6946784F)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x6946784F)
+I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
+I (../WHEELTEC_APP/Inc/servo_rc_capture.h)(0x69E0F348)
 I (../Core/Inc/tim.h)(0x69709A63)
 I (../Core/Inc/main.h)(0x68F73565)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6946784A)
@@ -2670,14 +2573,12 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h)(0x6946784A)
 I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h)(0x6946783F)
 I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h)(0x6946783F)
 I (../Drivers/CMSIS/Include/core_cm4.h)(0x6946784A)
-I (D:\Software\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (../Drivers/CMSIS/Include/cmsis_version.h)(0x6946784A)
 I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x6946784A)
 I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x6946784A)
 I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x6946784A)
 I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h)(0x6946783F)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x6946784A)
-I (D:\Software\keil\ARM\ARMCC\include\stddef.h)(0x6025237E)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h)(0x6946784A)
@@ -2699,21 +2600,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x6946784A)
-I (../Core/Inc/gpio.h)(0x68661F4C)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x6946784F)
-I (../Core/Inc/FreeRTOSConfig.h)(0x68706681)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x6946784F)
-I (../WHEELTEC_BSP/Inc/bsp_dwt.h)(0x67F8C4A4)
-I (../WHEELTEC_APP/Inc/servo_rc_capture.h)(0x69D8BAAB)
-F (..\WHEELTEC_APP\can_callback.c)(0x6946BAC5)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\can_callback.o --omf_browse wheeltec\can_callback.crf --depend wheeltec\can_callback.d)
+F (..\WHEELTEC_APP\can_callback.c)(0x69E0C6D1)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\can_callback.o --omf_browse wheeltec\can_callback.crf --depend wheeltec\can_callback.d)
 I (../Core/Inc/can.h)(0x68678399)
 I (../Core/Inc/main.h)(0x68F73565)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6946784A)
@@ -2752,7 +2639,6 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x6946784A)
-I (D:\Software\keil\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (D:\Software\keil\ARM\ARMCC\include\string.h)(0x6025237E)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x6946784F)
 I (../Core/Inc/FreeRTOSConfig.h)(0x68706681)
@@ -2765,11 +2651,7 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
 I (../WHEELTEC_BSP/Inc/bsp_can.h)(0x686F903B)
-I (../WHEELTEC_BSP/Inc/bsp_ServoDrive.h)(0x6877603E)
-I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x68F73E6B)
-I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
-I (../WHEELTEC_APP/Inc/servo_basic_task.h)(0x6946B696)
-F (..\WHEELTEC_APP\uart_callback.c)(0x68C9000F)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\uart_callback.o --omf_browse wheeltec\uart_callback.crf --depend wheeltec\uart_callback.d)
+F (..\WHEELTEC_APP\uart_callback.c)(0x69E0C8ED)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\uart_callback.o --omf_browse wheeltec\uart_callback.crf --depend wheeltec\uart_callback.d)
 I (../Core/Inc/usart.h)(0x689EE35E)
 I (../Core/Inc/main.h)(0x68F73565)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6946784A)
@@ -2819,7 +2701,7 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
 F (..\WHEELTEC_APP\servo_basic_output.c)(0x694A8FAE)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\servo_basic_output.o --omf_browse wheeltec\servo_basic_output.crf --depend wheeltec\servo_basic_output.d)
-I (../WHEELTEC_APP/Inc/servo_basic_control.h)(0x69D8F20E)
+I (../WHEELTEC_APP/Inc/servo_basic_control.h)(0x69E0C598)
 I (D:\Software\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (../Core/Inc/tim.h)(0x69709A63)
 I (../Core/Inc/main.h)(0x68F73565)
@@ -2858,12 +2740,11 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x6946784A)
-F (..\WHEELTEC_APP\servo_basic_control.c)(0x69DCEC8C)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\servo_basic_control.o --omf_browse wheeltec\servo_basic_control.crf --depend wheeltec\servo_basic_control.d)
-I (../WHEELTEC_APP/Inc/servo_basic_control.h)(0x69D8F20E)
+F (..\WHEELTEC_APP\servo_basic_control.c)(0x69E10995)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\servo_basic_control.o --omf_browse wheeltec\servo_basic_control.crf --depend wheeltec\servo_basic_control.d)
+I (../WHEELTEC_APP/Inc/servo_basic_control.h)(0x69E0C598)
 I (D:\Software\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (D:\Software\keil\ARM\ARMCC\include\stddef.h)(0x6025237E)
 I (D:\Software\keil\ARM\ARMCC\include\math.h)(0x60252378)
-I (D:\Software\keil\ARM\ARMCC\include\string.h)(0x6025237E)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x6946784F)
 I (../Core/Inc/FreeRTOSConfig.h)(0x68706681)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x6946784F)
@@ -2871,10 +2752,9 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x6946784F)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x6946784F)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6946784F)
-I (../WHEELTEC_APP/Inc/servo_rc_capture.h)(0x69D8BAAB)
+I (../WHEELTEC_APP/Inc/servo_rc_capture.h)(0x69E0F348)
 I (../Core/Inc/tim.h)(0x69709A63)
 I (../Core/Inc/main.h)(0x68F73565)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6946784A)
@@ -2911,8 +2791,8 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h)(0x6946784A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x6946784A)
-F (..\WHEELTEC_APP\servo_rc_capture.c)(0x69D8C90B)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\servo_rc_capture.o --omf_browse wheeltec\servo_rc_capture.crf --depend wheeltec\servo_rc_capture.d)
-I (../WHEELTEC_APP/Inc/servo_rc_capture.h)(0x69D8BAAB)
+F (..\WHEELTEC_APP\servo_rc_capture.c)(0x69E0F373)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../WHEELTEC_BSP/Inc -I ../WHEELTEC_APP/Inc -I ../USB_HOST/App -I ../USB_HOST/Target -I ../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc-I.\RTE\_WHEELTEC-ID:\Software\keil\keilpacks\ARM\CMSIS\6.2.0\CMSIS\Core\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o wheeltec\servo_rc_capture.o --omf_browse wheeltec\servo_rc_capture.crf --depend wheeltec\servo_rc_capture.d)
+I (../WHEELTEC_APP/Inc/servo_rc_capture.h)(0x69E0F348)
 I (D:\Software\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (../Core/Inc/tim.h)(0x69709A63)
 I (../Core/Inc/main.h)(0x68F73565)
@@ -3208,7 +3088,7 @@ I (../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc/usbh_hid.h)(0x6946784C
 I (../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc/usbh_hid_mouse.h)(0x6946784C)
 I (../Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc/usbh_hid_keybd.h)(0x6946784C)
 I (../WHEELTEC_BSP/Inc/bsp_gamepad.h)(0x6811DB09)
-I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x68F73E6B)
+I (../WHEELTEC_APP/Inc/RobotControl_task.h)(0x69E0DFF6)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6946784F)
 I (../WHEELTEC_APP/Inc/robot_select_init.h)(0x68F8373B)
 I (../USB_HOST/App/WiredPS2_gamepad.h)(0x6811DCEA)

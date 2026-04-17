@@ -3,7 +3,6 @@ wheeltec\servo_basic_control.o: ../WHEELTEC_APP/Inc/servo_basic_control.h
 wheeltec\servo_basic_control.o: D:\Software\keil\ARM\ARMCC\Bin\..\include\stdint.h
 wheeltec\servo_basic_control.o: D:\Software\keil\ARM\ARMCC\Bin\..\include\stddef.h
 wheeltec\servo_basic_control.o: D:\Software\keil\ARM\ARMCC\Bin\..\include\math.h
-wheeltec\servo_basic_control.o: D:\Software\keil\ARM\ARMCC\Bin\..\include\string.h
 wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 wheeltec\servo_basic_control.o: ../Core/Inc/FreeRTOSConfig.h
 wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
@@ -11,7 +10,6 @@ wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/inclu
 wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
 wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
 wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
-wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 wheeltec\servo_basic_control.o: ../WHEELTEC_APP/Inc/servo_rc_capture.h

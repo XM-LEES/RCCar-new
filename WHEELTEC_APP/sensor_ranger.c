@@ -42,6 +42,8 @@ BaseType_t RangerSensor_CaptureCallBack(uint8_t index)
 {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
+	if( g_xEventRangerSensor==NULL ) return pdFALSE;
+
 	//设置采集成功的标志位
 	xEventGroupSetBitsFromISR(g_xEventRangerSensor,1<<index,&xHigherPriorityTaskWoken);
 	
@@ -185,6 +187,8 @@ static uint32_t get_tim_activate_ch(HAL_TIM_ActiveChannel active_ch)
 //超声波触发,用于驱动超声波传感器工作
 static void RangerTrigger(RangerHALObj* ranger)
 {
+	if( g_xEventRangerSensor==NULL ) return;
+
 	//低电平触发超声波工作
 	HAL_GPIO_WritePin(ranger->TrigPort,ranger->TrigPin,GPIO_PIN_RESET);
 	delay_us(15);
@@ -410,6 +414,7 @@ void ultrasonic_task(void* param)
 		}
 	}
 }
+
 
 
 

@@ -13,6 +13,8 @@ extern "C" {
 #include <stdint.h>
 #include "tim.h"
 
+extern volatile uint32_t g_rc_capture_active_high;
+
 void ServoRC_Capture_Init(void);
 void ServoRC_IC_CaptureCallback(TIM_HandleTypeDef *htim);
 uint16_t ServoRC_GetThrottlePulse(void);

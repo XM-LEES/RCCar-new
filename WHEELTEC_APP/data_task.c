@@ -1,226 +1,127 @@
-#include "usart.h"
-
-//C Include File
+ï»¿#include "usart.h"
+#include <stdint.h>
 #include <string.h>
-
-//FreeRTOS Include File
 #include "FreeRTOS.h"
 #include "task.h"
-
-//BSP Include File
+#include "bsp_adc.h"
 #include "bsp_icm20948.h"
-#include "bsp_can.h"
-
-//APP Include File
-#include "robot_select_init.h"
 #include "sensor_ranger.h"
 #include "AutoRecharge_task.h"
+#include "robot_select_init.h"
 #include "servo_basic_control.h"
 
-//Ð£Ñéº¯Êý
-extern uint8_t Calculate_BCC(const uint8_t* checkdata,uint16_t datalen);
-	
-//Ö¸¶¨ÓëROSÍ¨ÐÅµÄ´®¿Ú
+extern uint8_t Calculate_BCC(const uint8_t* checkdata, uint16_t datalen);
+
 static UART_HandleTypeDef *serial = &huart4;
 
-//¶¨Òå¸÷¸öÊý¾Ý°üµÄÖ¡Í·Ö¡Î²ÒÔ¼°Êý¾Ý°ü³¤¶È
 #define BaseFRAME_HEAD 0x7B
 #define BaseFRAME_TAIL 0x7D
-#define BaseFRAME_LEN   24
+#define BaseFRAME_LEN  24
 
 #define RangerFRAME_HEAD 0xFA
 #define RangerFRAME_TAIL 0xFC
-#define RangerFRAME_LEN 19
+#define RangerFRAME_LEN  19
 
 #define ChargeFRAME_HEAD 0x7C
 #define ChargeFRAME_TAIL 0x7F
-#define ChargeFRAME_LEN  8
+#define ChargeFRAME_LEN   8
+
+static void update_power_state(void)
+{
+    RobotControlParam.Vol = (float)USER_ADC_Get_AdcBufValue(userconfigADC_VOL_CHANNEL) / 4095.0f * 3.3f * 11.0f;
+    RobotControlParam.LowPowerFlag = (RobotControlParam.Vol < 11.0f) ? 1U : 0U;
+}
 
 void RobotDataTransmitTask(void* param)
 {
-	//»ñÈ¡Ê±»ù,ÓÃÓÚ¸¨ÖúÈÎÎñÄÜ°´¹Ì¶¨ÆµÂÊÔËÐÐ
-	TickType_t preTime = xTaskGetTickCount();
-	
-	//±¾ÈÎÎñµÄ¿ØÖÆÆµÂÊ,µ¥Î»ÎªHz
-	const uint16_t TaskFreq = 20;
+    TickType_t preTime = xTaskGetTickCount();
+    const uint16_t TaskFreq = 20U;
+    uint8_t basebuffer[BaseFRAME_LEN];
+    uint8_t rangerbuffer[RangerFRAME_LEN];
+    uint8_t autorechargerbuffer[ChargeFRAME_LEN];
 
-	//¶¨ÒåÐèÒª·¢ËÍµÄÊý¾Ý
-	uint8_t basebuffer[BaseFRAME_LEN];
-	uint8_t rangerbuffer[RangerFRAME_LEN];
-	uint8_t autorechargerbuffer[ChargeFRAME_LEN];
-	
-	//×Ô¶¯»Ø³äCANÖ¡Êý¾Ý°ü
-	uint8_t chargerDevCANFrame[8] = { 0 };
-	
-	pCANInterface_t candev = &UserCAN1Dev;
-	
-	while(1)
-	{
-		float feedback_vx = RobotControlParam.feedbackVx;
-		float feedback_vy = RobotControlParam.feedbackVy;
-		float feedback_vz = RobotControlParam.feedbackVz;
+    (void)param;
 
-		uint8_t servo_feedback_active = 0U;
-		uint8_t telemetry_en_flag = RobotControlParam.en_flag;
+    for (;;)
+    {
+        float feedback_vx = 0.0f;
+        float feedback_vy = 0.0f;
+        float feedback_vz = 0.0f;
+        const uint8_t telemetry_en_flag = 1U;
 
-		servo_feedback_active = ServoBasic_GetOrinFeedback(&feedback_vx,&feedback_vy,&feedback_vz);
-		if( servo_feedback_active != 0U ) telemetry_en_flag = 1U;
-		//Ð¡³µ»ù´¡24×Ö½ÚÊý¾Ý°ü
-		basebuffer[0] = BaseFRAME_HEAD;
-		basebuffer[BaseFRAME_LEN-1] = BaseFRAME_TAIL;
-		basebuffer[1] = telemetry_en_flag;
-		basebuffer[2] = (short)(feedback_vx*1000)>>8;
-		basebuffer[3] = (short)(feedback_vx*1000);
-		basebuffer[4] = (short)(feedback_vy*1000)>>8;
-		basebuffer[5] = (short)(feedback_vy*1000);
-		basebuffer[6] = (short)(feedback_vz*1000)>>8;
-		basebuffer[7] = (short)(feedback_vz*1000);
-		basebuffer[8] = (short)(axis_9ValOri.accel.y)>>8;
-		basebuffer[9] = (short)(axis_9ValOri.accel.y);
-		basebuffer[10] = (short)(-axis_9ValOri.accel.x)>>8;
-		basebuffer[11] = (short)(-axis_9ValOri.accel.x);
-		basebuffer[12] = (short)(axis_9ValOri.accel.z)>>8;
-		basebuffer[13] = (short)(axis_9ValOri.accel.z);
-		basebuffer[14] = (short)(axis_9ValOri.gyro.y)>>8;
-		basebuffer[15] = (short)(axis_9ValOri.gyro.y);
-		basebuffer[16] = (short)(-axis_9ValOri.gyro.x)>>8;
-		basebuffer[17] = (short)(-axis_9ValOri.gyro.x);
-		if( telemetry_en_flag==0 )
-		{
-			basebuffer[18]=0;
-			basebuffer[19]=0;
-		}
-		else
-		{
-			basebuffer[18] = (short)(axis_9ValOri.gyro.z)>>8;
-			basebuffer[19] = (short)(axis_9ValOri.gyro.z);
-		}
-		basebuffer[20] = (short)(RobotControlParam.Vol*1000)>>8;
-		basebuffer[21] = (short)(RobotControlParam.Vol*1000);
-		basebuffer[22] = Calculate_BCC(basebuffer,22);
-		
-		//³¬Éù²¨Êý¾Ý°ü
-		rangerbuffer[0] = RangerFRAME_HEAD;
-		rangerbuffer[RangerFRAME_LEN-1] = RangerFRAME_TAIL;
-		rangerbuffer[1] = (short)(RangerHAL_A.dis*1000)>>8;
-		rangerbuffer[2] = (short)(RangerHAL_A.dis*1000);
-		rangerbuffer[3] = (short)(RangerHAL_B.dis*1000)>>8;
-		rangerbuffer[4] = (short)(RangerHAL_B.dis*1000);
-		rangerbuffer[5] = (short)(RangerHAL_C.dis*1000)>>8;
-		rangerbuffer[6] = (short)(RangerHAL_C.dis*1000);
-		rangerbuffer[7] = (short)(RangerHAL_D.dis*1000)>>8;
-		rangerbuffer[8] = (short)(RangerHAL_D.dis*1000);
-		rangerbuffer[9] = (short)(RangerHAL_E.dis*1000)>>8;
-		rangerbuffer[10] = (short)(RangerHAL_E.dis*1000);
-		rangerbuffer[11] = (short)(RangerHAL_F.dis*1000)>>8;
-		rangerbuffer[12] = (short)(RangerHAL_F.dis*1000);
-		rangerbuffer[13] = 0;
-		rangerbuffer[14] = 0;
-		rangerbuffer[15] = 0;
-		rangerbuffer[16] = 0;
-		rangerbuffer[17] = Calculate_BCC(rangerbuffer,17);
-		
-		//×Ô¶¯»Ø³äÊý¾Ý°ü
-		autorechargerbuffer[0] = ChargeFRAME_HEAD;
-		autorechargerbuffer[ChargeFRAME_LEN-1] = ChargeFRAME_TAIL;
-		autorechargerbuffer[1] = (short)ChargeDev.ChargingCur>>8;
-		autorechargerbuffer[2] = (short)ChargeDev.ChargingCur;
-		autorechargerbuffer[3] = ChargeDev.RedNum;
-		autorechargerbuffer[4] = ChargeDev.ChargingFlag;
-		autorechargerbuffer[5] = RobotControlParam.ChargeMode;
-		autorechargerbuffer[6] = Calculate_BCC(autorechargerbuffer,6);
-		
-        // UART4 -> ROS: send base frame only
-        HAL_UART_Transmit_DMA(serial,basebuffer,BaseFRAME_LEN);
-
-        // USART1 debug output keeps the original per-car composite payload
-        if( RobotControlParam.DebugLevel == 0 )
+        update_power_state();
+        if (ServoBasic_GetOrinFeedback(&feedback_vx, &feedback_vy, &feedback_vz) == 0U)
         {
-            if( RobotHardWareParam.CarType == S300 || RobotHardWareParam.CarType == S300Mini ||
-                RobotHardWareParam.CarType == S200_OUTDOOR || RobotHardWareParam.CarType == S260 )
-            {
-                uint8_t tmp[BaseFRAME_LEN+RangerFRAME_LEN+ChargeFRAME_LEN]={0};
-                uint8_t *ptr = tmp;
-
-                memcpy(ptr,basebuffer,BaseFRAME_LEN);
-                ptr+=BaseFRAME_LEN;
-
-                memcpy(ptr,rangerbuffer,RangerFRAME_LEN);
-                ptr+=RangerFRAME_LEN;
-
-                memcpy(ptr,autorechargerbuffer,ChargeFRAME_LEN);
-
-                HAL_UART_Transmit_DMA(&huart1,tmp,sizeof(tmp)/sizeof(tmp[0]));
-            }
-            else if( RobotHardWareParam.CarType == S200 || RobotHardWareParam.CarType == S100 )
-            {
-                uint8_t tmp[BaseFRAME_LEN+ChargeFRAME_LEN]={0};
-                uint8_t *ptr = tmp;
-
-                memcpy(ptr,basebuffer,BaseFRAME_LEN);
-                ptr+=BaseFRAME_LEN;
-
-                memcpy(ptr,autorechargerbuffer,ChargeFRAME_LEN);
-
-                HAL_UART_Transmit_DMA(&huart1,tmp,sizeof(tmp)/sizeof(tmp[0]));
-            }
-            else
-            {
-                HAL_UART_Transmit_DMA(&huart1,basebuffer,BaseFRAME_LEN);
-            }
+            feedback_vx = 0.0f;
+            feedback_vy = 0.0f;
+            feedback_vz = 0.0f;
         }
-		//CANÊý¾Ý·¢ËÍ.Í¨¹ýÖ¡id 0x101-0x103 ·¢ËÍ»ù´¡24×Ö½ÚÊý¾Ý
-		for(uint8_t i=0;i<3;i++)
-		{
-			candev->sendStd(0x100+(i+1),basebuffer+i*8,8);
-		}
-		
-		//×Ô¶¯»Ø³äÊý¾Ý°ü·¢ËÍ.Í¨¹ýÖ¡id 0x105 ·´À¡±êÖ¾Î»ÒÔ¼°ÉèÖÃ¶Ô½ÓËÙ¶È
-		chargerDevCANFrame[0] = RobotControlParam.ChargeMode;
-		chargerDevCANFrame[1] = (short)(ChargeDev.dockerX*1000)>>8;
-		chargerDevCANFrame[2] = (short)(ChargeDev.dockerX*1000);
-		chargerDevCANFrame[3] = (short)(ChargeDev.dockerY*1000)>>8;
-		chargerDevCANFrame[4] = (short)(ChargeDev.dockerY*1000);
-		chargerDevCANFrame[5] = (short)(ChargeDev.dockerZ*1000)>>8;
-		chargerDevCANFrame[6] = (short)(ChargeDev.dockerZ*1000);
-		chargerDevCANFrame[7] = 0;
-		candev->sendStd(0x105,chargerDevCANFrame,8);
-		
-		//×Ô¶¯»Ø³ä¿ØÖÆÌØÕ÷·¢ËÍ(TODO:ÒÆ³ý´Ë²¿·ÖÄÚÈÝ²¢ÓÅ»¯)
-		//ÓÃÍ¾:ÓÃÓÚ³äµç×°±¸Ê¶±ðÐ¡³µÔË¶¯ÌØÕ÷,ÔÚ¶Ô½Ó³äµç¹ý³ÌÖÐ½øÐÐÒ»¶¨µÄ¼õËÙ
-		uint8_t chargerControlSend[8]={0};
-		switch(RobotHardWareParam.CarType)
-		{
-			case S300:case S300Mini:case S100:
-				if( RobotControlParam.MotorA.feedback>0 ) chargerControlSend[0]=1;
-				else if( RobotControlParam.MotorA.feedback<0 ) chargerControlSend[0]=2;
-				else chargerControlSend[0]=0;
-			
-				if( RobotControlParam.MotorB.feedback>0 ) chargerControlSend[1]=1;
-				else if( RobotControlParam.MotorB.feedback<0 ) chargerControlSend[1]=2;
-				else chargerControlSend[1]=0;
-				break;
-			case S200:
-				if( RobotControlParam.MotorA.feedback>0 ) chargerControlSend[0]=1;
-				else if( RobotControlParam.MotorA.feedback<0 ) chargerControlSend[0]=2;
-				else chargerControlSend[0]=0;
-			
-				if( RobotControlParam.MotorD.feedback>0 ) chargerControlSend[1]=1;
-				else if( RobotControlParam.MotorD.feedback<0 ) chargerControlSend[1]=2;
-				else chargerControlSend[1]=0;
-				break;
-			//´øºóÖÃ³¬Éù²¨µÄ³µÐÍ,ÎÞÐè³äµç×°±¸Ê¶±ðÂÖ×ÓÔË¶¯Çé¿ö.×ÔÖ÷¼õËÙ
-			case S260:case S200_OUTDOOR:
-				chargerControlSend[0]=0;
-				chargerControlSend[1]=0;
-				break;
-		}
-		candev->sendStd(0x185,chargerControlSend,8);
-		
-		
-		/* ÑÓ³ÙÖ¸¶¨ÆµÂÊ */
-		vTaskDelayUntil(&preTime,pdMS_TO_TICKS( (1.0f/(float)TaskFreq)*1000) );
-	}
-	
-}
 
+        basebuffer[0] = BaseFRAME_HEAD;
+        basebuffer[1] = telemetry_en_flag;
+        basebuffer[2] = (uint8_t)(((int16_t)(feedback_vx * 1000.0f)) >> 8);
+        basebuffer[3] = (uint8_t)((int16_t)(feedback_vx * 1000.0f));
+        basebuffer[4] = (uint8_t)(((int16_t)(feedback_vy * 1000.0f)) >> 8);
+        basebuffer[5] = (uint8_t)((int16_t)(feedback_vy * 1000.0f));
+        basebuffer[6] = (uint8_t)(((int16_t)(feedback_vz * 1000.0f)) >> 8);
+        basebuffer[7] = (uint8_t)((int16_t)(feedback_vz * 1000.0f));
+        basebuffer[8] = (uint8_t)(((int16_t)axis_9ValOri.accel.y) >> 8);
+        basebuffer[9] = (uint8_t)((int16_t)axis_9ValOri.accel.y);
+        basebuffer[10] = (uint8_t)(((int16_t)(-axis_9ValOri.accel.x)) >> 8);
+        basebuffer[11] = (uint8_t)((int16_t)(-axis_9ValOri.accel.x));
+        basebuffer[12] = (uint8_t)(((int16_t)axis_9ValOri.accel.z) >> 8);
+        basebuffer[13] = (uint8_t)((int16_t)axis_9ValOri.accel.z);
+        basebuffer[14] = (uint8_t)(((int16_t)axis_9ValOri.gyro.y) >> 8);
+        basebuffer[15] = (uint8_t)((int16_t)axis_9ValOri.gyro.y);
+        basebuffer[16] = (uint8_t)(((int16_t)(-axis_9ValOri.gyro.x)) >> 8);
+        basebuffer[17] = (uint8_t)((int16_t)(-axis_9ValOri.gyro.x));
+        basebuffer[18] = (uint8_t)(((int16_t)axis_9ValOri.gyro.z) >> 8);
+        basebuffer[19] = (uint8_t)((int16_t)axis_9ValOri.gyro.z);
+        basebuffer[20] = (uint8_t)(((int16_t)(RobotControlParam.Vol * 1000.0f)) >> 8);
+        basebuffer[21] = (uint8_t)((int16_t)(RobotControlParam.Vol * 1000.0f));
+        basebuffer[22] = Calculate_BCC(basebuffer, 22U);
+        basebuffer[23] = BaseFRAME_TAIL;
+
+        rangerbuffer[0] = RangerFRAME_HEAD;
+        rangerbuffer[1] = (uint8_t)(((int16_t)(RangerHAL_A.dis * 1000.0f)) >> 8);
+        rangerbuffer[2] = (uint8_t)((int16_t)(RangerHAL_A.dis * 1000.0f));
+        rangerbuffer[3] = (uint8_t)(((int16_t)(RangerHAL_B.dis * 1000.0f)) >> 8);
+        rangerbuffer[4] = (uint8_t)((int16_t)(RangerHAL_B.dis * 1000.0f));
+        rangerbuffer[5] = (uint8_t)(((int16_t)(RangerHAL_C.dis * 1000.0f)) >> 8);
+        rangerbuffer[6] = (uint8_t)((int16_t)(RangerHAL_C.dis * 1000.0f));
+        rangerbuffer[7] = (uint8_t)(((int16_t)(RangerHAL_D.dis * 1000.0f)) >> 8);
+        rangerbuffer[8] = (uint8_t)((int16_t)(RangerHAL_D.dis * 1000.0f));
+        rangerbuffer[9] = (uint8_t)(((int16_t)(RangerHAL_E.dis * 1000.0f)) >> 8);
+        rangerbuffer[10] = (uint8_t)((int16_t)(RangerHAL_E.dis * 1000.0f));
+        rangerbuffer[11] = (uint8_t)(((int16_t)(RangerHAL_F.dis * 1000.0f)) >> 8);
+        rangerbuffer[12] = (uint8_t)((int16_t)(RangerHAL_F.dis * 1000.0f));
+        rangerbuffer[13] = 0U;
+        rangerbuffer[14] = 0U;
+        rangerbuffer[15] = 0U;
+        rangerbuffer[16] = 0U;
+        rangerbuffer[17] = Calculate_BCC(rangerbuffer, 17U);
+        rangerbuffer[18] = RangerFRAME_TAIL;
+
+        autorechargerbuffer[0] = ChargeFRAME_HEAD;
+        autorechargerbuffer[1] = (uint8_t)(((int16_t)ChargeDev.ChargingCur) >> 8);
+        autorechargerbuffer[2] = (uint8_t)((int16_t)ChargeDev.ChargingCur);
+        autorechargerbuffer[3] = ChargeDev.RedNum;
+        autorechargerbuffer[4] = ChargeDev.ChargingFlag;
+        autorechargerbuffer[5] = RobotControlParam.ChargeMode;
+        autorechargerbuffer[6] = Calculate_BCC(autorechargerbuffer, 6U);
+        autorechargerbuffer[7] = ChargeFRAME_TAIL;
+
+        HAL_UART_Transmit_DMA(serial, basebuffer, BaseFRAME_LEN);
+
+        if (RobotControlParam.DebugLevel == 0U)
+        {
+            uint8_t tmp[BaseFRAME_LEN + RangerFRAME_LEN + ChargeFRAME_LEN] = {0U};
+            memcpy(tmp, basebuffer, BaseFRAME_LEN);
+            memcpy(tmp + BaseFRAME_LEN, rangerbuffer, RangerFRAME_LEN);
+            memcpy(tmp + BaseFRAME_LEN + RangerFRAME_LEN, autorechargerbuffer, ChargeFRAME_LEN);
+            HAL_UART_Transmit_DMA(&huart1, tmp, sizeof(tmp));
+        }
+
+        vTaskDelayUntil(&preTime, pdMS_TO_TICKS((1000.0f / (float)TaskFreq)));
+    }
+}
