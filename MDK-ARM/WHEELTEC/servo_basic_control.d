@@ -12,6 +12,7 @@ wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/porta
 wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
 wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 wheeltec\servo_basic_control.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+wheeltec\servo_basic_control.o: ../WHEELTEC_APP/Inc/hall_speed.h
 wheeltec\servo_basic_control.o: ../WHEELTEC_APP/Inc/servo_rc_capture.h
 wheeltec\servo_basic_control.o: ../Core/Inc/tim.h
 wheeltec\servo_basic_control.o: ../Core/Inc/main.h

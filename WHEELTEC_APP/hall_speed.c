@@ -1,6 +1,6 @@
 /**
  * @file hall_speed.c
- * @brief Single-edge hall speed measurement with direction sampled from a second channel.
+ * @brief Hall speed measurement with Hall A edge counting and Hall B direction sampling.
  */
 
 #include "hall_speed.h"
@@ -10,13 +10,22 @@
 
 #define HALL_WHEEL_DIAMETER_M            0.235f
 #define HALL_WHEEL_CIRCUMFERENCE_M       (HALL_WHEEL_DIAMETER_M * 3.14159265358979f)
-#define HALL_COUNT_EVENTS_PER_REV        1U
+#define HALL_COUNT_EVENTS_PER_REV        8U
 #define HALL_MIN_EVENT_INTERVAL_US       1500U
 #define HALL_TIMEOUT_MIN_US           500000U
 #define HALL_TIMEOUT_MAX_US          4000000U
 #define HALL_DIR_INVERT                  0U
+#define HALL_COUNT_USE_CHANNEL_B         1U
 
 volatile hall_speed_state_t g_hall_speed_state = {0};
+volatile uint32_t g_hall_exti_irq_count = 0U;
+volatile uint32_t g_hall_exti_callback_count = 0U;
+volatile uint32_t g_hall_accepted_edge_count = 0U;
+
+static GPIO_TypeDef *hall_count_gpio_port = HallA_GPIO_Port;
+static uint16_t hall_count_pin = HallA_Pin;
+static GPIO_TypeDef *hall_dir_gpio_port = HallB_GPIO_Port;
+static uint16_t hall_dir_pin = HallB_Pin;
 
 static uint32_t hall_speed_get_time_us(void)
 {
@@ -45,12 +54,26 @@ static uint32_t hall_speed_get_timeout_us(uint32_t last_period_us)
 
 static uint8_t hall_speed_get_b_active(void)
 {
-	return (HAL_GPIO_ReadPin(HallB_GPIO_Port, HallB_Pin) == GPIO_PIN_RESET) ? 1U : 0U;
+	return (HAL_GPIO_ReadPin(hall_dir_gpio_port, hall_dir_pin) == GPIO_PIN_RESET) ? 1U : 0U;
 }
 
 void HallSpeed_Init(void)
 {
 	__disable_irq();
+	if (HALL_COUNT_USE_CHANNEL_B != 0U)
+	{
+		hall_count_gpio_port = HallB_GPIO_Port;
+		hall_count_pin = HallB_Pin;
+		hall_dir_gpio_port = HallA_GPIO_Port;
+		hall_dir_pin = HallA_Pin;
+	}
+	else
+	{
+		hall_count_gpio_port = HallA_GPIO_Port;
+		hall_count_pin = HallA_Pin;
+		hall_dir_gpio_port = HallB_GPIO_Port;
+		hall_dir_pin = HallB_Pin;
+	}
 	g_hall_speed_state.event_count_total = 0;
 	g_hall_speed_state.last_event_us = 0U;
 	g_hall_speed_state.last_period_us = 0U;
@@ -60,7 +83,20 @@ void HallSpeed_Init(void)
 	g_hall_speed_state.timeout_active = 1U;
 	g_hall_speed_state.reserved0 = 0U;
 	g_hall_speed_state.reserved1 = 0U;
+	g_hall_exti_irq_count = 0U;
+	g_hall_exti_callback_count = 0U;
+	g_hall_accepted_edge_count = 0U;
 	__enable_irq();
+}
+
+void HallSpeed_OnExtiIrq(void)
+{
+	g_hall_exti_irq_count++;
+}
+
+uint16_t HallSpeed_GetCountPin(void)
+{
+	return hall_count_pin;
 }
 
 void HallSpeed_OnCountEvent(void)
@@ -87,6 +123,7 @@ void HallSpeed_OnCountEvent(void)
 	g_hall_speed_state.direction = direction;
 	g_hall_speed_state.timeout_active = 0U;
 	g_hall_speed_state.event_count_total += direction;
+	g_hall_accepted_edge_count++;
 }
 
 hall_speed_state_t HallSpeed_GetState(void)
@@ -152,8 +189,9 @@ uint8_t HallSpeed_GetSignedSpeedMps(float *speed_mps)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	if (GPIO_Pin == HallA_Pin)
+	if (GPIO_Pin == hall_count_pin)
 	{
+		g_hall_exti_callback_count++;
 		HallSpeed_OnCountEvent();
 	}
 }

@@ -38,10 +38,11 @@
   - `PE9`：`Hall A`
   - `PE11`：`Hall B`
 - 计数方式固定为：
-  - 仅在 `Hall A` 的下降沿记录一次有效事件
-  - 在该时刻读取 `Hall B` 电平判定方向
-  - 当前默认 `HALL_COUNT_EVENTS_PER_REV = 1`
-  - 后续若改成两个检测点，只修改 `HALL_COUNT_EVENTS_PER_REV = 2`
+  - 当前验证方案暂改为在 `Hall B` 的上升沿和下降沿都记录有效事件
+  - 在该时刻读取 `Hall A` 电平判定方向
+  - 按当前实测，`Hall B` 双边沿统计约为每圈 `8` 个有效事件
+  - 当前默认 `HALL_COUNT_EVENTS_PER_REV = 8`
+  - 若回退到 `Hall B` 单边沿统计，则同步改回 `HALL_COUNT_EVENTS_PER_REV = 4`
 - 当前轮径按 `0.235 m` 计算，轮周长约 `0.738 m`
 - 当前阶段不启用 `PID`，只做真实测速与反馈替换
 
@@ -96,8 +97,29 @@
 - `g_orin_feedback_scale` 只保留给旧的 PWM 估算反馈，不再作用于霍尔真轮速
 - 默认值为 `1254`（按千分比），即 `1.254x`
 - `battery` 单位为 mV
-- `UART4 -> ROS` 只发送这 24 字节基础帧
+- 常规模式下 `UART4 -> ROS` 发送这 24 字节基础帧
 - 不再向 ROS 这一路混发 `19` 字节超声波帧或 `8` 字节回充帧
+
+### UART4 霍尔调试帧
+为排查霍尔输入，当前默认额外在 `UART4` 基础帧后追加 1 帧固定 32 字节调试帧。
+可在 Keil Watch 中把 `g_uart4_hall_debug_enable` 设为 `0` 关闭。
+
+```text
+0xEB hall_a hall_b dir speed_valid timeout_active cnt_3 cnt_2 cnt_1 cnt_0 period_3 period_2 period_1 period_0 fault_h fault_l speed_h speed_l irq_3 irq_2 irq_1 irq_0 cb_3 cb_2 cb_1 cb_0 edge_3 edge_2 edge_1 edge_0 bcc 0xED
+```
+
+说明：
+- `hall_a/hall_b`：当前引脚低电平有效，`1` 表示当前为低电平
+- `dir`：方向，`0x01` 为正向，`0xFF` 为反向，`0x00` 表示尚未形成有效方向
+- `speed_valid`：霍尔速度当前是否有效
+- `timeout_active`：霍尔速度当前是否超时
+- `cnt_3..cnt_0`：`event_count_total`，32 位有符号计数，高字节在前
+- `period_3..period_0`：`last_period_us`，单位 `us`，32 位无符号，高字节在前
+- `fault_h/fault_l`：`fault_count` 低 16 位
+- `speed_h/speed_l`：霍尔计算速度，单位 `mm/s`，16 位有符号，高字节在前
+- `irq_3..irq_0`：`EXTI9_5_IRQHandler()` 进入次数
+- `cb_3..cb_0`：`HAL_GPIO_EXTI_Callback(HallA_Pin)` 命中次数
+- `edge_3..edge_0`：被 `HallSpeed_OnCountEvent()` 接受为有效边沿的次数
 
 ## 核心接口
 文件：`WHEELTEC_APP/Inc/servo_basic_control.h`

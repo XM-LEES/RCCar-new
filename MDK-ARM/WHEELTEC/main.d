@@ -61,5 +61,6 @@ wheeltec\main.o: ../WHEELTEC_BSP/Inc/bsp_dwt.h
 wheeltec\main.o: ../WHEELTEC_BSP/Inc/bsp_can.h
 wheeltec\main.o: ../WHEELTEC_BSP/Inc/bsp_adc.h
 wheeltec\main.o: ../WHEELTEC_BSP/Inc/bsp_flash.h
+wheeltec\main.o: ../WHEELTEC_APP/Inc/hall_speed.h
 wheeltec\main.o: ../WHEELTEC_APP/Inc/servo_basic_control.h
 wheeltec\main.o: ../WHEELTEC_APP/Inc/robot_select_init.h

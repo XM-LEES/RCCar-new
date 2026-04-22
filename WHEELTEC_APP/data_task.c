@@ -1,4 +1,4 @@
-﻿#include "usart.h"
+#include "usart.h"
 #include <stdint.h>
 #include <string.h>
 #include "FreeRTOS.h"
@@ -7,6 +7,8 @@
 #include "bsp_icm20948.h"
 #include "sensor_ranger.h"
 #include "AutoRecharge_task.h"
+#include "main.h"
+#include "hall_speed.h"
 #include "robot_select_init.h"
 #include "servo_basic_control.h"
 
@@ -18,6 +20,10 @@ static UART_HandleTypeDef *serial = &huart4;
 #define BaseFRAME_TAIL 0x7D
 #define BaseFRAME_LEN  24
 
+#define HallFRAME_HEAD 0xEB
+#define HallFRAME_TAIL 0xED
+#define HallFRAME_LEN  32
+
 #define RangerFRAME_HEAD 0xFA
 #define RangerFRAME_TAIL 0xFC
 #define RangerFRAME_LEN  19
@@ -26,10 +32,58 @@ static UART_HandleTypeDef *serial = &huart4;
 #define ChargeFRAME_TAIL 0x7F
 #define ChargeFRAME_LEN   8
 
+volatile uint32_t g_uart4_hall_debug_enable = 0U;
+
 static void update_power_state(void)
 {
     RobotControlParam.Vol = (float)USER_ADC_Get_AdcBufValue(userconfigADC_VOL_CHANNEL) / 4095.0f * 3.3f * 11.0f;
     RobotControlParam.LowPowerFlag = (RobotControlParam.Vol < 11.0f) ? 1U : 0U;
+}
+
+static void pack_be32(uint8_t *dst, uint32_t value)
+{
+    dst[0] = (uint8_t)(value >> 24);
+    dst[1] = (uint8_t)(value >> 16);
+    dst[2] = (uint8_t)(value >> 8);
+    dst[3] = (uint8_t)value;
+}
+
+static void pack_be16(uint8_t *dst, int16_t value)
+{
+    dst[0] = (uint8_t)(((uint16_t)value) >> 8);
+    dst[1] = (uint8_t)value;
+}
+
+static void build_hall_debug_frame(uint8_t *frame)
+{
+    hall_speed_state_t hall_snapshot;
+    float hall_speed_mps = 0.0f;
+    int16_t hall_speed_mmps = 0;
+
+    if (frame == NULL)
+    {
+        return;
+    }
+
+    hall_snapshot = HallSpeed_GetState();
+    (void)HallSpeed_GetSignedSpeedMps(&hall_speed_mps);
+    hall_speed_mmps = (int16_t)(hall_speed_mps * 1000.0f);
+
+    frame[0] = HallFRAME_HEAD;
+    frame[1] = (HAL_GPIO_ReadPin(HallA_GPIO_Port, HallA_Pin) == GPIO_PIN_RESET) ? 1U : 0U;
+    frame[2] = (HAL_GPIO_ReadPin(HallB_GPIO_Port, HallB_Pin) == GPIO_PIN_RESET) ? 1U : 0U;
+    frame[3] = (uint8_t)hall_snapshot.direction;
+    frame[4] = hall_snapshot.speed_valid;
+    frame[5] = hall_snapshot.timeout_active;
+    pack_be32(&frame[6], (uint32_t)hall_snapshot.event_count_total);
+    pack_be32(&frame[10], hall_snapshot.last_period_us);
+    pack_be16(&frame[14], (int16_t)hall_snapshot.fault_count);
+    pack_be16(&frame[16], hall_speed_mmps);
+    pack_be32(&frame[18], g_hall_exti_irq_count);
+    pack_be32(&frame[22], g_hall_exti_callback_count);
+    pack_be32(&frame[26], g_hall_accepted_edge_count);
+    frame[30] = Calculate_BCC(frame, 30U);
+    frame[31] = HallFRAME_TAIL;
 }
 
 void RobotDataTransmitTask(void* param)
@@ -37,6 +91,8 @@ void RobotDataTransmitTask(void* param)
     TickType_t preTime = xTaskGetTickCount();
     const uint16_t TaskFreq = 20U;
     uint8_t basebuffer[BaseFRAME_LEN];
+    uint8_t uart4buffer[BaseFRAME_LEN + HallFRAME_LEN];
+    uint8_t hallbuffer[HallFRAME_LEN];
     uint8_t rangerbuffer[RangerFRAME_LEN];
     uint8_t autorechargerbuffer[ChargeFRAME_LEN];
 
@@ -111,7 +167,18 @@ void RobotDataTransmitTask(void* param)
         autorechargerbuffer[6] = Calculate_BCC(autorechargerbuffer, 6U);
         autorechargerbuffer[7] = ChargeFRAME_TAIL;
 
-        HAL_UART_Transmit_DMA(serial, basebuffer, BaseFRAME_LEN);
+        if (g_uart4_hall_debug_enable != 1U)
+        {
+            memset(uart4buffer, 0, sizeof(uart4buffer));
+            build_hall_debug_frame(hallbuffer);
+            memcpy(uart4buffer, basebuffer, BaseFRAME_LEN);
+            memcpy(uart4buffer + BaseFRAME_LEN, hallbuffer, HallFRAME_LEN);
+            HAL_UART_Transmit_DMA(serial, uart4buffer, sizeof(uart4buffer));
+        }
+        else
+        {
+            HAL_UART_Transmit_DMA(serial, basebuffer, BaseFRAME_LEN);
+        }
 
         if (RobotControlParam.DebugLevel == 0U)
         {

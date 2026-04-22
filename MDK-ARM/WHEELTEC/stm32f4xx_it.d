@@ -38,3 +38,4 @@ wheeltec\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.
 wheeltec\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h
 wheeltec\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 wheeltec\stm32f4xx_it.o: ../Core/Inc/stm32f4xx_it.h
+wheeltec\stm32f4xx_it.o: ../WHEELTEC_APP/Inc/hall_speed.h
