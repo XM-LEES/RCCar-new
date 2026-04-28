@@ -59,5 +59,6 @@ wheeltec\data_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_g
 wheeltec\data_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 wheeltec\data_task.o: ../WHEELTEC_BSP/Inc/bsp_dwt.h
 wheeltec\data_task.o: ../WHEELTEC_APP/Inc/AutoRecharge_task.h
+wheeltec\data_task.o: ../WHEELTEC_APP/Inc/hall_speed.h
 wheeltec\data_task.o: ../WHEELTEC_APP/Inc/robot_select_init.h
 wheeltec\data_task.o: ../WHEELTEC_APP/Inc/servo_basic_control.h

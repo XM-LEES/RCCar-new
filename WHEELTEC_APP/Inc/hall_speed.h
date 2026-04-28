@@ -1,6 +1,6 @@
 /**
  * @file hall_speed.h
- * @brief Hall wheel-speed measurement using PE9 count events and PE11 direction sampling.
+ * @brief Hall wheel-speed measurement with configurable count and direction channels.
  */
 
 #ifndef HALL_SPEED_H
@@ -26,9 +26,14 @@ typedef struct
 } hall_speed_state_t;
 
 extern volatile hall_speed_state_t g_hall_speed_state;
+extern volatile uint32_t g_hall_exti_irq_count;
+extern volatile uint32_t g_hall_exti_callback_count;
+extern volatile uint32_t g_hall_accepted_edge_count;
 
 void HallSpeed_Init(void);
 void HallSpeed_OnCountEvent(void);
+void HallSpeed_OnExtiIrq(void);
+uint16_t HallSpeed_GetCountPin(void);
 uint8_t HallSpeed_GetSignedSpeedMps(float *speed_mps);
 hall_speed_state_t HallSpeed_GetState(void);
 
