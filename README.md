@@ -97,28 +97,8 @@
 - 默认值为 `1254`（按千分比），即 `1.254x`
 - `battery` 单位为 mV
 - 常规模式下 `UART4 -> ROS` 发送这 24 字节基础帧
-- 不再向 ROS 这一路混发 `19` 字节超声波帧或 `8` 字节回充帧
-
-### UART4 霍尔调试帧
-为排查霍尔输入，当前默认额外在 `UART4` 基础帧后追加 1 帧固定 32 字节调试帧。
-可在 Keil Watch 中把 `g_uart4_hall_debug_enable` 设为 `0` 关闭。
-
-```text
-0xEB hall_a hall_b dir speed_valid timeout_active cnt_3 cnt_2 cnt_1 cnt_0 period_3 period_2 period_1 period_0 fault_h fault_l speed_h speed_l irq_3 irq_2 irq_1 irq_0 cb_3 cb_2 cb_1 cb_0 edge_3 edge_2 edge_1 edge_0 bcc 0xED
-```
-
-说明：
-- `hall_a/hall_b`：当前引脚低电平有效，`1` 表示当前为低电平
-- `dir`：方向，`0x01` 为正向，`0xFF` 为反向，`0x00` 表示尚未形成有效方向
-- `speed_valid`：霍尔速度当前是否有效
-- `timeout_active`：霍尔速度当前是否超时
-- `cnt_3..cnt_0`：`event_count_total`，32 位有符号计数，高字节在前
-- `period_3..period_0`：`last_period_us`，单位 `us`，32 位无符号，高字节在前
-- `fault_h/fault_l`：`fault_count` 低 16 位
-- `speed_h/speed_l`：霍尔计算速度，单位 `mm/s`，16 位有符号，高字节在前
-- `irq_3..irq_0`：当前计数脚对应 EXTI 处理函数的进入次数
-- `cb_3..cb_0`：`HAL_GPIO_EXTI_Callback(HallB_Pin)` 命中次数
-- `edge_3..edge_0`：被 `HallSpeed_OnCountEvent()` 接受为有效边沿的次数
+- 不向 ROS 这一路混发霍尔调试帧、`19` 字节超声波帧或 `8` 字节回充帧
+- 霍尔调试信息通过 OLED 和 Keil Watch 观察
 
 ## 核心接口
 文件：`WHEELTEC_APP/Inc/servo_basic_control.h`
