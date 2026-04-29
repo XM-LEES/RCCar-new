@@ -14,7 +14,7 @@
 #define HALL_MIN_EVENT_INTERVAL_US       1500U
 #define HALL_TIMEOUT_MIN_US           500000U
 #define HALL_TIMEOUT_MAX_US          4000000U
-#define HALL_DIR_INVERT                  0U
+#define HALL_DIR_INVERT                  1U
 #define HALL_COUNT_USE_CHANNEL_B         1U
 
 volatile hall_speed_state_t g_hall_speed_state = {0};

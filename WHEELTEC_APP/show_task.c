@@ -1,17 +1,13 @@
 ﻿#include "show_task.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "main.h"
 #include "bsp_oled.h"
 #include "bsp_adc.h"
 #include "bsp_icm20948.h"
+#include "hall_speed.h"
 #include "robot_select_init.h"
 #include "servo_basic_control.h"
-
-extern volatile uint32_t g_orin_ackermann_wheelbase_mm;
-extern volatile uint32_t g_orin_ackermann_track_width_mm;
-extern volatile uint32_t g_orin_ackermann_max_steering_millirad;
-extern volatile uint32_t g_orin_vx_forward_cap_mmps;
-extern volatile uint32_t g_orin_vx_reverse_cap_mmps;
 
 static pOLEDInterface_t oled = &UserOLED;
 
@@ -23,30 +19,80 @@ void oled_page_down(void)
 {
 }
 
-static void show_ackermann_status(void)
+static void show_u4_zero_padded(uint8_t x, uint8_t y, uint32_t value)
+{
+    value %= 10000U;
+    oled->ShowNumber(x, y, (value / 1000U) % 10U, 1, 12);
+    oled->ShowNumber((uint8_t)(x + 8U), y, (value / 100U) % 10U, 1, 12);
+    oled->ShowNumber((uint8_t)(x + 16U), y, (value / 10U) % 10U, 1, 12);
+    oled->ShowNumber((uint8_t)(x + 24U), y, value % 10U, 1, 12);
+}
+
+static void show_i4_zero_padded(uint8_t x, uint8_t y, int32_t value)
+{
+    uint32_t magnitude;
+
+    if (value < 0)
+    {
+        oled->ShowString(x, y, "-");
+        magnitude = (uint32_t)(-value);
+    }
+    else
+    {
+        oled->ShowString(x, y, "+");
+        magnitude = (uint32_t)value;
+    }
+
+    show_u4_zero_padded((uint8_t)(x + 8U), y, magnitude);
+}
+
+static void show_debug_status(void)
 {
     const servo_basic_state_t *state = ServoBasic_GetState();
+    const uint16_t adc_vol = USER_ADC_Get_AdcBufValue(userconfigADC_VOL_CHANNEL);
+    hall_speed_state_t hall = HallSpeed_GetState();
+    float feedback_vx = 0.0f;
+    float feedback_vy = 0.0f;
+    float feedback_vz = 0.0f;
 
-    oled->ShowString(0, 0, "Ackermann");
-    oled->ShowString(0, 12, "Mode:");
-    oled->ShowString(42, 12, (state->control_mode == SERVO_CTRL_MODE_RC_PASSTHROUGH) ? "RC " : "AUTO");
+    (void)feedback_vy;
+    (void)ServoBasic_GetOrinFeedback(&feedback_vx, &feedback_vy, &feedback_vz);
 
-    oled->ShowString(0, 24, "ESC:");
-    oled->ShowNumber(36, 24, state->esc_pulse_us, 4, 12);
-    oled->ShowString(72, 24, "STR:");
-    oled->ShowNumber(102, 24, state->servo_pulse_us, 4, 12);
+    oled->ShowString(0, 0, "                ");
+    oled->ShowString(0, 0, "M:");
+    oled->ShowString(16, 0, (state->control_mode == SERVO_CTRL_MODE_RC_PASSTHROUGH) ? "RC  " : "AUTO");
+    oled->ShowString(56, 0, "R");
+    oled->ShowNumber(64, 0, ServoBasic_IsRcOverrideActive(), 1, 12);
+    oled->ShowString(80, 0, "G");
+    oled->ShowNumber(88, 0, ServoBasic_IsRcEmergencyActive(), 1, 12);
 
-    oled->ShowString(0, 36, "RC:");
-    oled->ShowNumber(24, 36, ServoBasic_IsRcOverrideActive(), 1, 12);
-    oled->ShowString(44, 36, "GD:");
-    oled->ShowNumber(68, 36, ServoBasic_IsRcEmergencyActive(), 1, 12);
-    oled->ShowString(86, 36, "V:");
-    oled->ShowFloat(98, 36, RobotControlParam.Vol, 2, 2);
+    oled->ShowString(0, 12, "                ");
+    oled->ShowString(0, 12, "E");
+    oled->ShowNumber(8, 12, state->esc_pulse_us, 4, 12);
+    oled->ShowString(56, 12, "S");
+    oled->ShowNumber(64, 12, state->servo_pulse_us, 4, 12);
 
-    oled->ShowString(0, 48, "WB:");
-    oled->ShowNumber(24, 48, g_orin_ackermann_wheelbase_mm, 3, 12);
-    oled->ShowString(54, 48, "TW:");
-    oled->ShowNumber(78, 48, g_orin_ackermann_track_width_mm, 3, 12);
+    oled->ShowString(0, 24, "                ");
+    oled->ShowString(0, 24, "V");
+    oled->ShowFloat(8, 24, RobotControlParam.Vol, 2, 2);
+    oled->ShowString(64, 24, "A");
+    show_u4_zero_padded(72, 24, adc_vol);
+
+    oled->ShowString(0, 36, "                ");
+    oled->ShowString(0, 36, "VX");
+    oled->ShowFloat(16, 36, feedback_vx, 1, 2);
+    oled->ShowString(64, 36, "VZ");
+    oled->ShowFloat(88, 36, feedback_vz, 1, 2);
+
+    oled->ShowString(0, 48, "                ");
+    oled->ShowString(0, 48, "A");
+    oled->ShowNumber(8, 48, (HAL_GPIO_ReadPin(HallA_GPIO_Port, HallA_Pin) == GPIO_PIN_RESET) ? 0U : 1U, 1, 12);
+    oled->ShowString(24, 48, "B");
+    oled->ShowNumber(32, 48, (HAL_GPIO_ReadPin(HallB_GPIO_Port, HallB_Pin) == GPIO_PIN_RESET) ? 0U : 1U, 1, 12);
+    oled->ShowString(48, 48, "D");
+    oled->ShowString(56, 48, (hall.direction < 0) ? "-" : ((hall.direction > 0) ? "+" : "0"));
+    oled->ShowString(72, 48, "C");
+    show_i4_zero_padded(80, 48, hall.event_count_total);
 
     oled->RefreshGram();
 }
@@ -54,13 +100,12 @@ static void show_ackermann_status(void)
 void show_task(void* param)
 {
     TickType_t preTime = xTaskGetTickCount();
-    const uint16_t TaskFreq = 10U;
-
+    const uint16_t TaskPeriodMs = 100U;
     (void)param;
 
     while (1)
     {
-        show_ackermann_status();
-        vTaskDelayUntil(&preTime, pdMS_TO_TICKS((1000.0f / (float)TaskFreq)));
+        show_debug_status();
+        vTaskDelayUntil(&preTime, pdMS_TO_TICKS(TaskPeriodMs));
     }
 }

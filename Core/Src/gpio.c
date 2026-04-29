@@ -143,21 +143,13 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(ENKey_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : HallB_Pin */
-  GPIO_InitStruct.Pin = HallB_Pin;
+  /*Configure GPIO pins : HallA_Pin HallB_Pin */
+  GPIO_InitStruct.Pin = HallA_Pin|HallB_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(HallB_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : HallA_Pin */
-  GPIO_InitStruct.Pin = HallA_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(HallA_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
