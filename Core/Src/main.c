@@ -61,8 +61,6 @@
 static uint8_t HardWareVersion = HW_UnKnown;
 
 uint8_t rosbuffer = 0;
-uint8_t usart1_buffer = 0;
-uint8_t rs485_buffer = 0;
 
 DebugType_t g_sys_debug = { 0 };
 /* USER CODE END PV */
@@ -158,8 +156,6 @@ static void App_StartInputInterrupts(void)
   HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_3);
 
   HAL_UART_Receive_IT(&huart4, &rosbuffer, 1);
-  HAL_UART_Receive_IT(&huart1, &usart1_buffer, 1);
-  HAL_UART_Receive_IT(&huart3, &rs485_buffer, 1);
 }
 
 
@@ -196,7 +192,6 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_USART1_UART_Init();
-  MX_USART3_UART_Init();
   MX_UART4_Init();
   MX_TIM4_Init();
   MX_TIM6_Init();

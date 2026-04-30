@@ -29,14 +29,14 @@ and CAN runtime source paths.
 
 `Core/Src/main.c` performs the hardware setup and starts FreeRTOS:
 
-1. Initializes GPIO, DMA, UART1/3/4, TIM4/6/8/9/11, and ADC.
+1. Initializes GPIO, DMA, UART1 TX debug, UART4 ROS, TIM4/6/8/9/11, and ADC.
 2. Calls `ServoBasic_Init()`, `DWT_Init()`, `HallSpeed_Init()`, and
    `ADC_Userconfig_Init()`.
 3. Starts TIM6 for runtime stats and initializes the OLED.
 4. Detects the C63x hardware version and adjusts pin setup for v1.0 boards.
 5. Starts TIM4 input capture on CH1/CH2/CH3 for RC throttle, steering, and
    guard input.
-6. Starts byte-wise UART receive interrupts on UART4, UART1, and UART3.
+6. Starts byte-wise UART receive interrupts on UART4 only.
 7. Calls `Robot_Select()` to load the current Ackermann geometry constants.
 8. Calls `MX_FREERTOS_Init()` and starts the scheduler.
 
@@ -91,7 +91,7 @@ Support paths that are active but not primary motion control:
 - `RobotDataTransmitTask` keeps the 24-byte ROS frame; bytes `8..19` are IMU
   placeholders fixed to zero because ICM20948 support was removed.
 - `RobotDataTransmitTask` sends the same 24-byte base frame on UART4 and UART1
-  debug output when `DebugLevel == 0`.
+  TX debug output when `DebugLevel == 0`; USART1 RX is not started.
 
 ## Removed Feature Paths
 
@@ -123,6 +123,12 @@ Keil project:
   `stm32f4xx_hal_can.c` entries, and `WHEELTEC.ioc` CAN configuration are
   removed. `Core/Src/can.c`, `Core/Inc/can.h`, and BSP CAN sources remain only
   as historical recovery material.
+- USART3/RS485 current-target entry: `MX_USART3_UART_Init()`, USART3 RX DMA,
+  USART3 IRQ handlers, PB10/PB11 USART3 pin config, and `WHEELTEC.ioc` USART3
+  config are removed because no current APP task consumes RS485 bytes.
+- USART1 RX receive path: the unused byte receive buffer and receive restart
+  path are removed. USART1 remains TX-only debug output for the duplicated
+  24-byte telemetry frame.
 - Dormant BSP compile entries: `bsp_RGBLight.c`, `bsp_siic.c`, `bsp_can.c`,
   `bsp_key.c`, `bsp_RTOSdebug.c`, and `bsp_led.c` are no longer compiled by the
   current Keil target. Their source files remain under `WHEELTEC_BSP/`.
@@ -144,6 +150,10 @@ Dormant flash-backed parameter storage is intentionally kept available for
 future power-off persistence. The current APP no longer reads the old default
 speed or line-diff parameters at startup.
 
+TIM9/TIM11 RGB PWM pin setup and PB6/PB7 IIC GPIO setup remain in Core as
+board-reserved hardware configuration. Their BSP runtime sources are not in the
+current Keil target, so they do not create APP tasks or control behavior.
+
 Dormant BSP source is kept for board recovery or future feature work, but must
 be re-added to the Keil project together with the APP owner that calls it.
 
@@ -164,8 +174,8 @@ gamepad path.
 - Keep vendor libraries and build artifacts out of source cleanup commits.
 - `WHEELTEC.ioc` is aligned with the cleanup state: USB Host, USB OTG FS,
   Bluetooth/App USART2, USART2 TX DMA, Ranger TIM2/TIM3, Ranger GPIO, CAN1/2,
-  CAN NVIC, and CAN pins are no longer configured. Keep UART4 telemetry at 24
-  bytes and ROS commands at 11 bytes unless the upper-computer parser is changed
-  at the same time.
+  CAN NVIC, CAN pins, USART3/RS485, and USART1 RX are no longer configured.
+  Keep UART4 telemetry at 24 bytes and ROS commands at 11 bytes unless the
+  upper-computer parser is changed at the same time.
 - Do not remove `DWT` as part of IMU cleanup; hall speed timing still depends on
   the Cortex-M cycle counter.

@@ -162,10 +162,11 @@
 
 ## 当前保留但不属于正式控制主路径
 以下内容仍可作为调试或附属功能保留，但不再决定车辆正式控制行为：
-- `USART1` 调试输出
+- `USART1 TX` 调试输出；`USART1 RX` 不再启动接收
 - 板载 OLED 显示
 - `bsp_flash.c` 仍在 Keil 目标内保留，用作未来参数断电保存能力；当前 APP 不再读取旧默认速度/纠偏参数
-- TIM9/TIM11 硬件初始化仍在 Core 中保留；RGB BSP 源码保留但当前 Keil 目标不编译、不启动 RGB 任务
+- TIM9/TIM11 硬件初始化仍在 Core 中保留；RGB 预留接口和 BSP 源码保留，但当前 Keil 目标不编译、不启动 RGB 任务
+- PB6/PB7 IIC GPIO 初始化仍在 Core 中保留；软件 IIC BSP 源码保留但当前 Keil 目标不编译，OLED 不依赖该 IIC 总线
 
 ## 已清理的旧功能
 以下旧功能已从源码和 Keil 工程编译项中移除：
@@ -178,9 +179,10 @@
 - 旧 RC joystick 和旧 `RobotControl_task` 兼容层：删除旧输入采集、旧控制队列和旧任务；reset/log 串口 helper 已内联到 `SerialControl_task.c`
 - 旧 CAN 舵机驱动编译入口：`bsp_ServoDrive.c` 从 Keil 工程移出，源码保留为 BSP 历史参考
 - CAN 当前工程入口：`MX_CAN1_Init()` / `MX_CAN2_Init()`、CAN IRQ、HAL CAN 编译开关、Keil `can.c` / `stm32f4xx_hal_can.c` 编译项和 `WHEELTEC.ioc` CAN 配置已移除；`Core/Src/can.c` 与 BSP CAN 源码仅作为历史参考保留
+- USART3/RS485 当前入口：移除 `MX_USART3_UART_Init()`、USART3 RX DMA、USART3 IRQ、PB10/PB11 USART3 引脚和 `WHEELTEC.ioc` USART3 配置；当前上位机链路只走 `UART4`
 - 未被当前 APP 调用的 BSP 编译入口：`bsp_RGBLight.c`、`bsp_siic.c`、`bsp_can.c`、`bsp_key.c`、`bsp_RTOSdebug.c`、`bsp_led.c` 已从 Keil 工程移出，源码保留
 - Hall 32 字节调试帧和 IRQ/Callback/有效边沿调试计数：删除串口混发风险，仅保留 `g_hall_speed_state`
-- `WHEELTEC.ioc` 已同步移除 USB Host、USB OTG FS、Bluetooth/App USART2、USART2 TX DMA、Ranger TIM2/TIM3、超声波 GPIO、CAN1/CAN2、CAN NVIC 和 CAN 引脚
+- `WHEELTEC.ioc` 已同步移除 USB Host、USB OTG FS、Bluetooth/App USART2、USART2 TX DMA、Ranger TIM2/TIM3、超声波 GPIO、CAN1/CAN2、CAN NVIC、CAN 引脚、USART3/RS485 和 USART1 RX
 
 保留路径不变：
 - `UART4` ROS 下行控制与 24 字节上行基础帧

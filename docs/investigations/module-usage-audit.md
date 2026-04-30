@@ -35,6 +35,8 @@ the current `main` branch.
 | `reportErr_task.c` | The task was not created and depended on Bluetooth/App, AutoRecharge, old CAN servo diagnostics, and removed command sources. | Deleted the stale report task and removed its Keil entry. |
 | `can_callback.c` | Active cleanup no longer starts the old `WHEELTEC_APP` CAN callback path, and current App code does not call the BSP CAN receive helpers. | Deleted the stale App callback file without modifying the BSP layer. Reintroduce CAN receive handling only from `WHEELTEC_APP` if a future App feature needs it. |
 | CAN current target | User confirmed CAN is not used, while `main.c`, IRQ files, HAL config, Keil project files, and `WHEELTEC.ioc` still described CAN1/CAN2 as active peripherals. | Removed CAN startup calls, CAN IRQ handlers, the HAL CAN module switch, Keil `can.c` / `stm32f4xx_hal_can.c` entries, and IOC CAN pins/NVIC/IP config. Historical CAN source files remain out of the current target. |
+| USART3/RS485 current target | USART3 initialized PB10/PB11, RX DMA, and IRQ, but the UART callback only restarted receive and no task consumed `rs485_buffer`. | Removed USART3 startup, RX DMA/IRQ, PB10/PB11 USART3 pin config, and IOC USART3 config. |
+| USART1 RX path | USART1 TX is useful for debug telemetry, but RX was only restarted and never consumed. | Kept USART1 TX DMA/debug output and removed USART1 RX receive startup, PA10 RX config, and the unused byte buffer. |
 | Hall debug telemetry | The 32-byte debug frame was diagnostic-only and conflicted with the fixed ROS UART4 parser contract if mixed into the stream. | Deleted the debug frame path plus IRQ/Callback/accepted-edge counters; kept `g_hall_speed_state` for Keil Watch/OLED diagnosis. |
 
 ## Still Present But Not Primary Motion Control
@@ -44,6 +46,8 @@ the current `main` branch.
 | `bsp_ServoDrive.c` | Source remains under `WHEELTEC_BSP`, but it is no longer in the Keil build. | Re-enable only together with CAN Core/HAL config, its CAN callback queue, and an app-level owner. |
 | Dormant BSP sources | `bsp_RGBLight.c`, `bsp_siic.c`, `bsp_can.c`, `bsp_key.c`, `bsp_RTOSdebug.c`, and `bsp_led.c` remain under `WHEELTEC_BSP`, but current APP code does not call their runtime interfaces. | Re-enable by adding both the BSP file and the APP-level feature owner back to the Keil project; CAN additionally requires restoring Core/IOC/HAL CAN support. |
 | `bsp_flash.c` | Still compiled in the current Keil target. Current APP no longer reads the old default-speed or line-diff values at startup. | Keep as the board-supported path for future power-off parameter persistence. |
+| TIM9/TIM11 RGB pin setup | Core still initializes the board RGB PWM pins, but RGB BSP is not compiled and no RGB task starts. | Keep as board-reserved hardware configuration unless the physical RGB connector must be freed. |
+| PB6/PB7 IIC GPIO setup | Core still initializes the software IIC pins high, but software IIC BSP is not compiled and OLED uses separate pins. | Keep as board-reserved IIC configuration unless the pins are needed for another function. |
 
 ## Protocol Documentation Note
 
@@ -63,4 +67,5 @@ the project contract.
    RGB, key/LED, RTOS debug, and the retained historical CAN/ServoDrive source.
 3. Recheck `WHEELTEC.ioc` before any future CubeMX regeneration; it is now
    aligned with this cleanup state and no longer configures USB Host,
-   USB OTG FS, Bluetooth/App USART2, Ranger TIM2/TIM3, Ranger GPIO, or CAN1/2.
+   USB OTG FS, Bluetooth/App USART2, Ranger TIM2/TIM3, Ranger GPIO, CAN1/2, or
+   USART3/RS485.
