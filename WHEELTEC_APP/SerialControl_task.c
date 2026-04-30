@@ -9,11 +9,10 @@
 
 #include <stdint.h>
 
-#include "bsp_RGBLight.h"
+#include "bsp_buzzer.h"
+#include "main.h"
 #include "robot_select_init.h"
-#include "RGBStripControl_task.h"
 #include "servo_basic_control.h"
-#include "RobotControl_task.h"
 
 #define ROS_CMD_FRAME_LEN 11U
 
@@ -42,6 +41,76 @@ static void serial_control_send_zero_command(void)
 	ServoBasic_UpdateFromOrin(0.0f, 0.0f, 0.0f, 1U);
 }
 
+static void serial_control_check_reset(char uart_recv)
+{
+	static char res_buf[5] = {0};
+	static uint8_t res_count = 0U;
+
+	res_buf[res_count] = uart_recv;
+
+	if (uart_recv == 'r' || res_count > 0U)
+	{
+		res_count++;
+	}
+	else
+	{
+		res_count = 0U;
+	}
+
+	if (res_count != 5U)
+	{
+		return;
+	}
+
+	res_count = 0U;
+	if (res_buf[0] == 'r' && res_buf[1] == 'e' && res_buf[2] == 's' && res_buf[3] == 'e' && res_buf[4] == 't')
+	{
+		NVIC_SystemReset();
+	}
+}
+
+static void serial_control_set_debug_level(char uart_recv)
+{
+	static char log_buf[4] = {0};
+	static uint8_t log_count = 0U;
+
+	log_buf[log_count] = uart_recv;
+
+	if (uart_recv == 'L' || log_count > 0U)
+	{
+		log_count++;
+	}
+	else
+	{
+		log_count = 0U;
+	}
+
+	if (log_count != 4U)
+	{
+		return;
+	}
+
+	log_count = 0U;
+	if (log_buf[0] != 'L' || log_buf[1] != 'O' || log_buf[2] != 'G')
+	{
+		return;
+	}
+
+	switch (log_buf[3])
+	{
+	case '0': RobotControlParam.DebugLevel = 0U; break;
+	case '1': RobotControlParam.DebugLevel = 1U; break;
+	case '2': RobotControlParam.DebugLevel = 2U; break;
+	case '3': RobotControlParam.DebugLevel = 3U; break;
+	default:  RobotControlParam.DebugLevel = 0U; break;
+	}
+
+	{
+		pBuzzerInterface_t tips = &UserBuzzer;
+		tips->AddTask(1U, 200U);
+	}
+}
+
 void SerialControlTask(void *param)
 {
 	extern QueueHandle_t g_xQueueROSserial;
@@ -62,8 +131,8 @@ void SerialControlTask(void *param)
 			continue;
 		}
 
-		_System_Reset_FromAPP_RTOS((char)recv);
-		RobotControl_SetDebugLevel((char)recv);
+		serial_control_check_reset((char)recv);
+		serial_control_set_debug_level((char)recv);
 
 		if (recv == 0x7BU || roscmdCount > 0U)
 		{
@@ -88,17 +157,6 @@ void SerialControlTask(void *param)
 
 		if (roscmdBuf[1] == 4U)
 		{
-			if (roscmdBuf[2] == 1U)
-			{
-				userdefine_rgb[0] = 1U;
-				userdefine_rgb[1] = roscmdBuf[3];
-				userdefine_rgb[2] = roscmdBuf[4];
-				userdefine_rgb[3] = roscmdBuf[5];
-			}
-			else
-			{
-				userdefine_rgb[0] = 0U;
-			}
 			continue;
 		}
 

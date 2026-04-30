@@ -4,7 +4,6 @@
 #include "main.h"
 #include "bsp_oled.h"
 #include "bsp_adc.h"
-#include "bsp_icm20948.h"
 #include "hall_speed.h"
 #include "robot_select_init.h"
 #include "servo_basic_control.h"

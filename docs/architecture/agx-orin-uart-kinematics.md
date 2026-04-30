@@ -7,7 +7,7 @@
 - `servo_basic_control.c`
 - `TIM8 CH1/CH2 -> PC6/PC7`
 
-旧的 WHEELTEC 通用底盘控制队列和多车型驱动代码仍有文件保留，但当前 `MX_FREERTOS_Init()` 不创建 `RobotControl_task`。
+旧的 WHEELTEC 通用底盘控制队列和多车型 `RobotControl_task` 兼容层已从当前 APP 中删除。
 
 ## 几何参数来源
 当前 Ackermann 几何以 `EXTRINSICS.md` 为准：

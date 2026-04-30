@@ -2,6 +2,12 @@
 
 日期: 2026-04-13
 
+> 历史状态：本文记录的是旧 CAN 编码器反馈、旧 `RobotControl_task` 和旧
+> 厂家底盘控制路径的排查过程。当前固件已经改为 Ackermann-only APP，
+> 速度上行以 `WHEELTEC_APP/data_task.c` 的 24 字节 UART4 基础帧为准，
+> 下行以 `WHEELTEC_APP/SerialControl_task.c` 的 11 字节控制帧为准。
+> 本文仅作为历史定位参考，不代表当前固件结构。
+
 ## 1. 问题摘要
 
 实车测试时出现两个直接现象:

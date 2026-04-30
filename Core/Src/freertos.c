@@ -15,16 +15,10 @@
 #include <stdio.h>
 
 #include "queue.h"
-#include "bsp_oled.h"
-#include "bsp_RTOSdebug.h"
-#include "bsp_RGBLight.h"
 #include "bsp_buzzer.h"
-#include "robot_select_init.h"
 #include "servo_basic_task.h"
 
-QueueHandle_t g_xQueueCANopenCallback = NULL;
 QueueHandle_t g_xQueueROSserial = NULL;
-QueueHandle_t g_xQueueHeartBeatMsg = NULL;
 TaskHandle_t g_servoTaskHandle = NULL;
 
 osThreadId_t InitTaskHandle;
@@ -35,10 +29,8 @@ const osThreadAttr_t InitTask_attributes = {
 };
 
 void show_task(void* param);
-void ImuTask(void* param);
 void SerialControlTask(void* param);
 void RobotDataTransmitTask(void* param);
-void RGBControl_task(void* param);
 
 void StartInitTask(void *argument);
 
@@ -103,12 +95,6 @@ void MX_FREERTOS_Init(void)
         Error_Handler();
     }
 
-    ret = xTaskCreate(ImuTask, "ImuTask", 128 * 4, NULL, osPriorityNormal, NULL);
-    if (ret != pdPASS)
-    {
-        Error_Handler();
-    }
-
     ret = xTaskCreate(SerialControlTask, "SerialConTask", 128 * 2, NULL, osPriorityNormal, NULL);
     if (ret != pdPASS)
     {
@@ -116,12 +102,6 @@ void MX_FREERTOS_Init(void)
     }
 
     ret = xTaskCreate(RobotDataTransmitTask, "transmit_task", 128 * 4, NULL, osPriorityNormal, NULL);
-    if (ret != pdPASS)
-    {
-        Error_Handler();
-    }
-
-    ret = xTaskCreate(RGBControl_task, "RGB_task", 128 * 2, NULL, osPriorityBelowNormal7, NULL);
     if (ret != pdPASS)
     {
         Error_Handler();

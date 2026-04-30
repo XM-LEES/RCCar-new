@@ -92,14 +92,17 @@
 固定 24 字节基础帧：
 
 ```text
-0x7B flag vx_h vx_l vy_h vy_l wz_h wz_l ay_h ay_l -ax_h -ax_l az_h az_l gy_h gy_l -gx_h -gx_l gz_h gz_l bat_h bat_l bcc 0x7D
+0x7B flag vx_h vx_l vy_h vy_l wz_h wz_l imu0 ... imu11 bat_h bat_l bcc 0x7D
 ```
 
 说明：
-- `vx/vy/wz` 由 `ServoBasic_GetOrinFeedback()` 提供
-- 阶段一启用霍尔轮速后，`vx` 优先使用真实轮速反馈
+- 字段真实/虚拟状态以 `docs/protocols/serial-protocol.md` 为准
+- `vx` 是真实霍尔轮速反馈；无有效霍尔测速时填 `0`
+- `vy` 当前固定为 `0`，只是保留阿克曼底盘不使用的横向速度槽位
+- `wz` 由霍尔 `vx`、当前舵机 PWM 和轴距估算，不是 IMU 实测
 - `g_orin_feedback_scale` 只保留给旧的 PWM 估算反馈，不再作用于霍尔真轮速
 - 默认值为 `1254`（按千分比），即 `1.254x`
+- 原 IMU 字段 `8..19` 保留为协议占位，当前固件固定填 `0`
 - `battery` 单位为 mV
 - 常规模式下 `UART4 -> ROS` 发送这 24 字节基础帧
 - 不向 ROS 这一路混发霍尔调试帧、`19` 字节超声波帧或 `8` 字节回充帧
@@ -123,6 +126,8 @@
 - 旧差速/多车型底盘控制队列
 - 旧 CAN 舵机协议入口
 - 旧轮速反馈驱动 ROS 速度回传的逻辑
+- 旧 RC joystick 输入
+- RGB 灯条运行时任务
 - Bluetooth/App 控制
 - USB HID 手柄控制
 - 自动回充 `AutoRecharge`
@@ -158,8 +163,9 @@
 ## 当前保留但不属于正式控制主路径
 以下内容仍可作为调试或附属功能保留，但不再决定车辆正式控制行为：
 - `USART1` 调试输出
-- 板载 OLED / RGB 显示
-- 部分旧兼容接口空实现
+- 板载 OLED 显示
+- `bsp_flash.c` 仍在 Keil 目标内保留，用作未来参数断电保存能力；当前 APP 不再读取旧默认速度/纠偏参数
+- TIM9/TIM11 硬件初始化仍在 Core 中保留；RGB BSP 源码保留但当前 Keil 目标不编译、不启动 RGB 任务
 
 ## 已清理的旧功能
 以下旧功能已从源码和 Keil 工程编译项中移除：
@@ -167,8 +173,14 @@
 - USB HID 手柄控制：删除 `USB_HOST/` 和 `bsp_gamepad.*`，移除 HCD/USB Host 编译入口
 - 自动回充 `AutoRecharge`：删除回充任务、回充命令处理和回充附加上报
 - 超声波 `Ranger`：删除 Ranger 采集模块、避障参数和 Ranger 附加上报
+- ICM20948/IMU：删除 ICM 驱动、寄存器定义和 IMU 任务；ROS 上行 24 字节帧保留 IMU 占位并固定填 `0`
+- RGB APP 运行时：删除 `RGBStripControl_task.*`，ROS `cmd1=4` RGB 帧保持兼容但当前忽略
+- 旧 RC joystick 和旧 `RobotControl_task` 兼容层：删除旧输入采集、旧控制队列和旧任务；reset/log 串口 helper 已内联到 `SerialControl_task.c`
+- 旧 CAN 舵机驱动编译入口：`bsp_ServoDrive.c` 从 Keil 工程移出，源码保留为 BSP 历史参考
+- CAN 当前工程入口：`MX_CAN1_Init()` / `MX_CAN2_Init()`、CAN IRQ、HAL CAN 编译开关、Keil `can.c` / `stm32f4xx_hal_can.c` 编译项和 `WHEELTEC.ioc` CAN 配置已移除；`Core/Src/can.c` 与 BSP CAN 源码仅作为历史参考保留
+- 未被当前 APP 调用的 BSP 编译入口：`bsp_RGBLight.c`、`bsp_siic.c`、`bsp_can.c`、`bsp_key.c`、`bsp_RTOSdebug.c`、`bsp_led.c` 已从 Keil 工程移出，源码保留
 - Hall 32 字节调试帧和 IRQ/Callback/有效边沿调试计数：删除串口混发风险，仅保留 `g_hall_speed_state`
-- `WHEELTEC.ioc` 已同步移除 USB Host、USB OTG FS、Bluetooth/App USART2、USART2 TX DMA、Ranger TIM2/TIM3 和超声波 GPIO
+- `WHEELTEC.ioc` 已同步移除 USB Host、USB OTG FS、Bluetooth/App USART2、USART2 TX DMA、Ranger TIM2/TIM3、超声波 GPIO、CAN1/CAN2、CAN NVIC 和 CAN 引脚
 
 保留路径不变：
 - `UART4` ROS 下行控制与 24 字节上行基础帧
