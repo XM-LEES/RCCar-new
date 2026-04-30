@@ -71,6 +71,9 @@
 
 
 ## 串口协议
+
+当前 ROS 串口协议以 `docs/protocols/serial-protocol.md` 的“当前固件 ROS UART 协议”为准；厂家表格仅作为历史资料对照。
+
 ### ROS -> STM32 下行控制帧
 固定 11 字节：
 
