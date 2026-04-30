@@ -78,11 +78,9 @@ typedef struct{
 	uint8_t Enkeystate;      //小车硬件使能开关的状态,1开关弹起 0开关按下
 	float Vol;              //小车电池电压
 	uint8_t DriveErrRecovery;//小车请求清除驱动报错,设置1请求清除驱动器的报错,此位会自动置0,
-	uint8_t ChargeMode;      //自动回充模式, 1开启自动回充,0关闭自动回充
 	uint8_t SecurityLevel;   //安全等级 0:若小车没有持续收到目标速度,则会主动停止 1:小车将保持最后一次的目标速度响应  
 	uint8_t EmergencyMode;   //应急模式,此位为1时,非电机无法驱动的报错,都可以强行控制小车,以应对在室外突发情况.若存在还可驱动的电机,也能拖动无法驱动的电机行驶
 	uint8_t softwareEnflag;  //软件急停标志位,设1可使小车进入急停状态
-	uint8_t RangerAvoidEN;   //超声波避障使能位,1使能超声波避障 0关闭
 	uint32_t LineDiffParam;  //机器人纠偏系数，0-100可调整
 	uint8_t ImuAssistedFlag; //imu辅助小车走直线标志位. 0无赋值,设置1时,小车被控制时,将通过imu的数据辅助小车走直线
 	uint8_t DebugLevel;      //小车报错调试等级. 0正常控制, 置1时小车将通过串口1、蓝牙串口汇报错误信息

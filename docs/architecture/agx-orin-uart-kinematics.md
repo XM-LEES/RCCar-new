@@ -1,20 +1,13 @@
 # AGX Orin -> STM32 串口运动学与 Ackermann PWM 链路说明
 
 ## 概述
-当前工程支持 AGX Orin 通过 UART 向 STM32 发送 11 字节速度帧。STM32 在 `SerialControl_task.c` 中解析 `Vx/Vy/Vz` 后，有两条后续路径：
+当前工程支持 AGX Orin 通过 UART 向 STM32 发送 11 字节速度帧。STM32 在 `SerialControl_task.c` 中解析 `Vx/Vy/Vz` 后，当前正式运动控制路径只进入 Ackermann PWM 链路：
 
-1. 底盘通用控制链路：
-   - `WriteRobotControlQueue()`
-   - `RobotControl_task.c`
-   - 适用于 WHEELTEC 原生多车型底盘
+- `ServoBasic_UpdateFromOrin()`
+- `servo_basic_control.c`
+- `TIM8 CH1/CH2 -> PC6/PC7`
 
-2. AutoRacer / Ackermann PWM 链路：
-   - `ServoBasic_UpdateFromOrin()`
-   - `servo_basic_control.c`
-   - `TIM8 CH1/CH2 -> PC6/PC7`
-   - 适用于当前 EXTRINSICS 定义的前轮转向车辆
-
-本说明重点描述第二条链路。
+旧的 WHEELTEC 通用底盘控制队列和多车型驱动代码仍有文件保留，但当前 `MX_FREERTOS_Init()` 不创建 `RobotControl_task`。
 
 ## 几何参数来源
 当前 Ackermann 几何以 `EXTRINSICS.md` 为准：
@@ -54,7 +47,6 @@
 1. `HAL_UART_RxCpltCallback()` 将字节写入 `g_xQueueROSserial`
 2. `SerialControlTask()` 组帧、做 BCC 校验、解析 `Vx/Vy/Vz`
 3. 若 RC 未抢占：
-   - 将 `ROS_CMD` 写入底盘控制队列
    - 调用 `ServoBasic_UpdateFromOrin(vx, vy, vz, flag_stop)`
 4. `servo_basic_control.c` 将速度命令映射为：
    - `ESC PWM -> TIM8_CH1 -> PC6`

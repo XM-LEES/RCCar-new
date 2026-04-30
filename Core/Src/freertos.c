@@ -23,11 +23,8 @@
 #include "servo_basic_task.h"
 
 QueueHandle_t g_xQueueCANopenCallback = NULL;
-QueueHandle_t g_xQueueBlueTooth = NULL;
 QueueHandle_t g_xQueueROSserial = NULL;
-QueueHandle_t g_xQueueAutoRecharge = NULL;
 QueueHandle_t g_xQueueHeartBeatMsg = NULL;
-TaskHandle_t g_reportErrTaskHandle = NULL;
 TaskHandle_t g_servoTaskHandle = NULL;
 
 osThreadId_t InitTaskHandle;
@@ -45,7 +42,6 @@ void RGBControl_task(void* param);
 
 void StartInitTask(void *argument);
 
-extern void MX_USB_HOST_Init(void);
 void MX_FREERTOS_Init(void);
 
 __weak void configureTimerForRunTimeStats(void)

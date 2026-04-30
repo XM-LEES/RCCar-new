@@ -110,11 +110,6 @@ static void CAN2_Filter_Init(void)
 //	
 //	if( 1==init ) return;
 //	
-//	//旧版C50C,无usb接口,需要对usb接口进行反向初始化
-//    __HAL_RCC_USB_OTG_FS_CLK_DISABLE();
-//    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_11|GPIO_PIN_12);
-//    HAL_NVIC_DisableIRQ(OTG_FS_IRQn);
-//	
 //	//对cubemx配置版本的can进行反初始化
 //    __HAL_RCC_CAN1_CLK_DISABLE();
 //    HAL_GPIO_DeInit(GPIOD, GPIO_PIN_0|GPIO_PIN_1);

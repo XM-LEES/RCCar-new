@@ -1,4 +1,8 @@
-# Servo Basic Control Interface Reference (WHEELTEC)
+# Archived Servo Basic Control Interface Reference (WHEELTEC)
+
+> Archive note: this document describes an older interface shape and is not the
+> current source of truth. Use `../../README.md` and the headers under
+> `WHEELTEC_APP/Inc/` for current behavior.
 
 This document enumerates the interfaces, variables, and parameters for the
 servo basic control integration. It is intended as a concise reference for

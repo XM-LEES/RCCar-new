@@ -24,7 +24,6 @@
 #include "dma.h"
 #include "tim.h"
 #include "usart.h"
-#include "usb_host.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -65,7 +64,6 @@
 
 static uint8_t HardWareVersion = HW_UnKnown; //绯荤粺纭欢鐗堟湰
 
-uint8_t BlueToothBuffer = 0;//钃濈墮涓插彛鎺ユ敹缂撳啿
 uint8_t rosbuffer = 0;      //ROS涓插彛鎺ユ敹缂撳啿鍖?
 uint8_t usart1_buffer = 0;  //涓插彛1鎺ユ敹缂撳啿鍖?
 uint8_t rs485_buffer = 0;   //485鎺ユ敹缂撳啿鍖?
@@ -117,11 +115,8 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_USART1_UART_Init();
-  MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   MX_UART4_Init();
-  MX_TIM2_Init();
-  MX_TIM3_Init();
   MX_TIM4_Init();
   MX_TIM6_Init();
   MX_TIM9_Init();
@@ -213,7 +208,6 @@ int main(void)
 	HAL_TIM_IC_Start_IT(&htim4,TIM_CHANNEL_3);
 	
 	//鍚姩涓插彛鎺ユ敹涓柇
-	HAL_UART_Receive_IT(&huart2,&BlueToothBuffer,1);
 	HAL_UART_Receive_IT(&huart4,&rosbuffer,1);
 	HAL_UART_Receive_IT(&huart1,&usart1_buffer,1);
 	HAL_UART_Receive_IT(&huart3,&rs485_buffer,1);
@@ -397,4 +391,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-

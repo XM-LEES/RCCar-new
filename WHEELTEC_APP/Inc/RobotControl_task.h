@@ -10,12 +10,9 @@
 enum {
     NONE_CMD = 0,
     BootLoader,
-    GamePad_CMD,
     RCJOY_CMD,
-    APP_CMD,
     ROS_CMD,
     CAN_CMD,
-    Charger_CMD,
     UnKnownCMD
 };
 

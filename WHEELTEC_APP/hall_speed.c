@@ -18,9 +18,6 @@
 #define HALL_COUNT_USE_CHANNEL_B         1U
 
 volatile hall_speed_state_t g_hall_speed_state = {0};
-volatile uint32_t g_hall_exti_irq_count = 0U;
-volatile uint32_t g_hall_exti_callback_count = 0U;
-volatile uint32_t g_hall_accepted_edge_count = 0U;
 
 static GPIO_TypeDef *hall_count_gpio_port = HallA_GPIO_Port;
 static uint16_t hall_count_pin = HallA_Pin;
@@ -83,20 +80,7 @@ void HallSpeed_Init(void)
 	g_hall_speed_state.timeout_active = 1U;
 	g_hall_speed_state.reserved0 = 0U;
 	g_hall_speed_state.reserved1 = 0U;
-	g_hall_exti_irq_count = 0U;
-	g_hall_exti_callback_count = 0U;
-	g_hall_accepted_edge_count = 0U;
 	__enable_irq();
-}
-
-void HallSpeed_OnExtiIrq(void)
-{
-	g_hall_exti_irq_count++;
-}
-
-uint16_t HallSpeed_GetCountPin(void)
-{
-	return hall_count_pin;
 }
 
 void HallSpeed_OnCountEvent(void)
@@ -123,7 +107,6 @@ void HallSpeed_OnCountEvent(void)
 	g_hall_speed_state.direction = direction;
 	g_hall_speed_state.timeout_active = 0U;
 	g_hall_speed_state.event_count_total += direction;
-	g_hall_accepted_edge_count++;
 }
 
 hall_speed_state_t HallSpeed_GetState(void)
@@ -191,7 +174,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	if (GPIO_Pin == hall_count_pin)
 	{
-		g_hall_exti_callback_count++;
 		HallSpeed_OnCountEvent();
 	}
 }

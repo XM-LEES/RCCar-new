@@ -108,7 +108,6 @@ void _System_Reset_FromAPP_RTOS(char uart_recv)
 
 void RobotControl_SetDebugLevel(char uart_recv)
 {
-    extern TaskHandle_t g_reportErrTaskHandle;
     static char res_buf[4] = {0};
     static uint8_t res_count = 0U;
 
@@ -145,10 +144,6 @@ void RobotControl_SetDebugLevel(char uart_recv)
             tips->AddTask(1U, 200U);
         }
 
-        if (g_reportErrTaskHandle != NULL)
-        {
-            xTaskNotifyGive(g_reportErrTaskHandle);
-        }
     }
 }
 

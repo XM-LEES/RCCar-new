@@ -15,6 +15,12 @@
 #include "servo_basic_control.h"
 #include "RobotControl_task.h"
 
+#define ROS_CMD_FRAME_LEN 11U
+
+#if ROS_CMD_FRAME_LEN != 11U
+#error "ROS downlink command frame must remain 11 bytes for the firmware parser."
+#endif
+
 uint8_t Calculate_BCC(const uint8_t *checkdata, uint16_t datalen)
 {
 	uint8_t bccval = 0U;
@@ -43,7 +49,7 @@ void SerialControlTask(void *param)
 	uint8_t recv = 0U;
 	uint8_t roscmdBuf[20] = {0U};
 	uint8_t roscmdCount = 0U;
-	const uint8_t cmdLen = 11U;
+	const uint8_t cmdLen = ROS_CMD_FRAME_LEN;
 	static uint8_t s_rc_override_blocking = 0U;
 	static uint8_t idleCount = 0U;
 
@@ -96,18 +102,11 @@ void SerialControlTask(void *param)
 			continue;
 		}
 
-		if (roscmdBuf[1] == 1U || roscmdBuf[1] == 2U)
-		{
-			RobotControlParam.ChargeMode = 1U;
-			continue;
-		}
-
 		if (roscmdBuf[1] != 0U)
 		{
 			continue;
 		}
 
-		RobotControlParam.ChargeMode = 0U;
 		RobotControlParam.SecurityLevel = roscmdBuf[2] & 0x01U;
 		RobotControlParam.softwareEnflag = (roscmdBuf[2] & 0x80U) ? 1U : 0U;
 

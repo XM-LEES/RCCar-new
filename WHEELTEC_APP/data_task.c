@@ -1,12 +1,9 @@
 #include "usart.h"
 #include <stdint.h>
-#include <string.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "bsp_adc.h"
 #include "bsp_icm20948.h"
-#include "sensor_ranger.h"
-#include "AutoRecharge_task.h"
 #include "robot_select_init.h"
 #include "servo_basic_control.h"
 
@@ -16,15 +13,11 @@ static UART_HandleTypeDef *serial = &huart4;
 
 #define BaseFRAME_HEAD 0x7B
 #define BaseFRAME_TAIL 0x7D
-#define BaseFRAME_LEN  24
+#define BaseFRAME_LEN  24U
 
-#define RangerFRAME_HEAD 0xFA
-#define RangerFRAME_TAIL 0xFC
-#define RangerFRAME_LEN  19
-
-#define ChargeFRAME_HEAD 0x7C
-#define ChargeFRAME_TAIL 0x7F
-#define ChargeFRAME_LEN   8
+#if BaseFRAME_LEN != 24U
+#error "UART4 ROS telemetry frame must remain 24 bytes for the upper computer parser."
+#endif
 
 static void update_power_state(void)
 {
@@ -37,8 +30,6 @@ void RobotDataTransmitTask(void* param)
     TickType_t preTime = xTaskGetTickCount();
     const uint16_t TaskFreq = 20U;
     uint8_t basebuffer[BaseFRAME_LEN];
-    uint8_t rangerbuffer[RangerFRAME_LEN];
-    uint8_t autorechargerbuffer[ChargeFRAME_LEN];
 
     (void)param;
 
@@ -82,44 +73,11 @@ void RobotDataTransmitTask(void* param)
         basebuffer[22] = Calculate_BCC(basebuffer, 22U);
         basebuffer[23] = BaseFRAME_TAIL;
 
-        rangerbuffer[0] = RangerFRAME_HEAD;
-        rangerbuffer[1] = (uint8_t)(((int16_t)(RangerHAL_A.dis * 1000.0f)) >> 8);
-        rangerbuffer[2] = (uint8_t)((int16_t)(RangerHAL_A.dis * 1000.0f));
-        rangerbuffer[3] = (uint8_t)(((int16_t)(RangerHAL_B.dis * 1000.0f)) >> 8);
-        rangerbuffer[4] = (uint8_t)((int16_t)(RangerHAL_B.dis * 1000.0f));
-        rangerbuffer[5] = (uint8_t)(((int16_t)(RangerHAL_C.dis * 1000.0f)) >> 8);
-        rangerbuffer[6] = (uint8_t)((int16_t)(RangerHAL_C.dis * 1000.0f));
-        rangerbuffer[7] = (uint8_t)(((int16_t)(RangerHAL_D.dis * 1000.0f)) >> 8);
-        rangerbuffer[8] = (uint8_t)((int16_t)(RangerHAL_D.dis * 1000.0f));
-        rangerbuffer[9] = (uint8_t)(((int16_t)(RangerHAL_E.dis * 1000.0f)) >> 8);
-        rangerbuffer[10] = (uint8_t)((int16_t)(RangerHAL_E.dis * 1000.0f));
-        rangerbuffer[11] = (uint8_t)(((int16_t)(RangerHAL_F.dis * 1000.0f)) >> 8);
-        rangerbuffer[12] = (uint8_t)((int16_t)(RangerHAL_F.dis * 1000.0f));
-        rangerbuffer[13] = 0U;
-        rangerbuffer[14] = 0U;
-        rangerbuffer[15] = 0U;
-        rangerbuffer[16] = 0U;
-        rangerbuffer[17] = Calculate_BCC(rangerbuffer, 17U);
-        rangerbuffer[18] = RangerFRAME_TAIL;
-
-        autorechargerbuffer[0] = ChargeFRAME_HEAD;
-        autorechargerbuffer[1] = (uint8_t)(((int16_t)ChargeDev.ChargingCur) >> 8);
-        autorechargerbuffer[2] = (uint8_t)((int16_t)ChargeDev.ChargingCur);
-        autorechargerbuffer[3] = ChargeDev.RedNum;
-        autorechargerbuffer[4] = ChargeDev.ChargingFlag;
-        autorechargerbuffer[5] = RobotControlParam.ChargeMode;
-        autorechargerbuffer[6] = Calculate_BCC(autorechargerbuffer, 6U);
-        autorechargerbuffer[7] = ChargeFRAME_TAIL;
-
         HAL_UART_Transmit_DMA(serial, basebuffer, BaseFRAME_LEN);
 
         if (RobotControlParam.DebugLevel == 0U)
         {
-            uint8_t tmp[BaseFRAME_LEN + RangerFRAME_LEN + ChargeFRAME_LEN] = {0U};
-            memcpy(tmp, basebuffer, BaseFRAME_LEN);
-            memcpy(tmp + BaseFRAME_LEN, rangerbuffer, RangerFRAME_LEN);
-            memcpy(tmp + BaseFRAME_LEN + RangerFRAME_LEN, autorechargerbuffer, ChargeFRAME_LEN);
-            HAL_UART_Transmit_DMA(&huart1, tmp, sizeof(tmp));
+            HAL_UART_Transmit_DMA(&huart1, basebuffer, BaseFRAME_LEN);
         }
 
         vTaskDelayUntil(&preTime, pdMS_TO_TICKS((1000.0f / (float)TaskFreq)));

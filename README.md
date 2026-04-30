@@ -8,6 +8,8 @@
 
 旧差速/多车型底盘控制、旧轮速反馈、旧 CAN 舵机协议已从正式控制主路径中移除，不再参与车辆实际运动控制与 ROS 速度回传。
 
+补充资料、厂家手册和历史排障记录已整理到 `docs/`。
+
 ## 当前正式控制链路
 ### 1. ROS 串口控制
 - 入口文件：`WHEELTEC_APP/SerialControl_task.c`
@@ -35,8 +37,8 @@
 ### 4. 霍尔轮速反馈（阶段一）
 - 当前阶段新增双路霍尔轮速输入，仅用于替换 `ROS` 上行 `vx` 伪反馈，不参与 `ESC` 闭环控制。
 - 接线规划：
-  - `PE9`：`Hall A`
-  - `PE11`：`Hall B`
+  - `PE13`：`Hall A`
+  - `PE14`：`Hall B`
 - 计数方式固定为：
   - 保留当前 `A/B` 角色互换方案：`Hall B` 作为计数脚，`Hall A` 作为方向脚
   - 仅在 `Hall B` 的下降沿记录一次有效事件
@@ -48,7 +50,7 @@
 #### 霍尔输入电气前提
 - 双路霍尔信号均按 `3.3V` 上拉、低电平有效处理
 - 霍尔传感器与主控必须共地
-- `PE9/PE11` 输入电平不得超过 `3.3V`
+- `PE13/PE14` 输入电平不得超过 `3.3V`
 - 若实测高电平可能高于 `3.3V`，必须先做电平转换或隔离
 - `PA13/PA14` 为 `SWD` 下载调试口，不能占用
 - `PC6/PC7` 已为正式 `ESC/Servo PWM` 输出，不能改作轮速输入
@@ -118,6 +120,10 @@
 - 旧差速/多车型底盘控制队列
 - 旧 CAN 舵机协议入口
 - 旧轮速反馈驱动 ROS 速度回传的逻辑
+- Bluetooth/App 控制
+- USB HID 手柄控制
+- 自动回充 `AutoRecharge`
+- 超声波 `Ranger`
 
 ## RC 抢占与安全策略
 - 默认控制模式：`AUTONOMOUS`
@@ -149,6 +155,19 @@
 ## 当前保留但不属于正式控制主路径
 以下内容仍可作为调试或附属功能保留，但不再决定车辆正式控制行为：
 - `USART1` 调试输出
-- 超声波与回充附加数据打包
 - 板载 OLED / RGB 显示
 - 部分旧兼容接口空实现
+
+## 已清理的旧功能
+以下旧功能已从源码和 Keil 工程编译项中移除：
+- Bluetooth/App 控制：删除 UART2 App 接收队列、蓝牙任务和 App 显示发送任务
+- USB HID 手柄控制：删除 `USB_HOST/` 和 `bsp_gamepad.*`，移除 HCD/USB Host 编译入口
+- 自动回充 `AutoRecharge`：删除回充任务、回充命令处理和回充附加上报
+- 超声波 `Ranger`：删除 Ranger 采集模块、避障参数和 Ranger 附加上报
+- Hall 32 字节调试帧和 IRQ/Callback/有效边沿调试计数：删除串口混发风险，仅保留 `g_hall_speed_state`
+- `WHEELTEC.ioc` 已同步移除 USB Host、USB OTG FS、Bluetooth/App USART2、USART2 TX DMA、Ranger TIM2/TIM3 和超声波 GPIO
+
+保留路径不变：
+- `UART4` ROS 下行控制与 24 字节上行基础帧
+- `TIM4 CH1/CH2/CH3` RC 接收器接管
+- `PE13/PE14` 霍尔轮速反馈

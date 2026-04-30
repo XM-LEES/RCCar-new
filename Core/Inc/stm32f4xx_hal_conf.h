@@ -71,7 +71,6 @@
 /* #define HAL_SMBUS_MODULE_ENABLED */
 /* #define HAL_WWDG_MODULE_ENABLED */
 /* #define HAL_PCD_MODULE_ENABLED */
-#define HAL_HCD_MODULE_ENABLED
 /* #define HAL_DSI_MODULE_ENABLED */
 /* #define HAL_QSPI_MODULE_ENABLED */
 /* #define HAL_QSPI_MODULE_ENABLED */
@@ -165,7 +164,6 @@
 #define  USE_HAL_DSI_REGISTER_CALLBACKS         0U /* DSI register callback disabled       */
 #define  USE_HAL_ETH_REGISTER_CALLBACKS         0U /* ETH register callback disabled       */
 #define  USE_HAL_HASH_REGISTER_CALLBACKS        0U /* HASH register callback disabled      */
-#define  USE_HAL_HCD_REGISTER_CALLBACKS         0U /* HCD register callback disabled       */
 #define  USE_HAL_I2C_REGISTER_CALLBACKS         0U /* I2C register callback disabled       */
 #define  USE_HAL_FMPI2C_REGISTER_CALLBACKS      0U /* FMPI2C register callback disabled    */
 #define  USE_HAL_FMPSMBUS_REGISTER_CALLBACKS    0U /* FMPSMBUS register callback disabled  */
@@ -430,10 +428,6 @@
 #ifdef HAL_PCD_MODULE_ENABLED
  #include "stm32f4xx_hal_pcd.h"
 #endif /* HAL_PCD_MODULE_ENABLED */
-
-#ifdef HAL_HCD_MODULE_ENABLED
- #include "stm32f4xx_hal_hcd.h"
-#endif /* HAL_HCD_MODULE_ENABLED */
 
 #ifdef HAL_DSI_MODULE_ENABLED
  #include "stm32f4xx_hal_dsi.h"
