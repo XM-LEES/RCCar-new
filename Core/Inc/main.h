@@ -41,8 +41,6 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-uint8_t get_HardWareVersion(void);
-GPIO_PinState get_EnKeyState(void);
 enum{
 	HW_UnKnown = 0, //Ӳ���汾
 	HW_1_0 , 

@@ -37,8 +37,7 @@ and CAN runtime source paths.
 5. Starts TIM4 input capture on CH1/CH2/CH3 for RC throttle, steering, and
    guard input.
 6. Starts byte-wise UART receive interrupts on UART4 only.
-7. Calls `Robot_Select()` to load the current Ackermann geometry constants.
-8. Calls `MX_FREERTOS_Init()` and starts the scheduler.
+7. Calls `MX_FREERTOS_Init()` and starts the scheduler.
 
 `Core/Src/freertos.c` currently creates these application tasks:
 
@@ -91,7 +90,8 @@ Support paths that are active but not primary motion control:
 - `RobotDataTransmitTask` keeps the 24-byte ROS frame; bytes `8..19` are IMU
   placeholders fixed to zero because ICM20948 support was removed.
 - `RobotDataTransmitTask` sends the same 24-byte base frame on UART4 and UART1
-  TX debug output when `DebugLevel == 0`; USART1 RX is not started.
+  TX debug output when `g_app_runtime_state.debug_level == 0`; USART1 RX is not
+  started. UART DMA busy/error results are counted in `g_app_runtime_state`.
 
 ## Removed Feature Paths
 
@@ -116,22 +116,29 @@ Keil project:
 - Legacy RC joystick and RobotControl compatibility: `rc_joystick.*` and
   `RobotControl_task.*`; serial reset/log helpers now live in
   `SerialControl_task.c`.
-- Legacy CAN servo drive build entry: `bsp_ServoDrive.c` is no longer compiled
-  by the Keil project, but the BSP source is kept for historical recovery.
+- Legacy CAN servo drive: `bsp_ServoDrive.*` is removed from the current cleanup
+  version. Restore it from git history or the vendor reference project if
+  CAN servo support is needed again.
 - CAN current-target entry: `MX_CAN1_Init()` / `MX_CAN2_Init()`, CAN IRQ
   handlers, the HAL CAN module switch, Keil `can.c` /
   `stm32f4xx_hal_can.c` entries, and `WHEELTEC.ioc` CAN configuration are
-  removed. `Core/Src/can.c`, `Core/Inc/can.h`, and BSP CAN sources remain only
-  as historical recovery material.
+  removed. The generated `Core/Src/can.c` and `Core/Inc/can.h` files are also
+  removed from the current cleanup version; restore CAN from git history or the
+  vendor reference project if it is needed again.
 - USART3/RS485 current-target entry: `MX_USART3_UART_Init()`, USART3 RX DMA,
   USART3 IRQ handlers, PB10/PB11 USART3 pin config, and `WHEELTEC.ioc` USART3
   config are removed because no current APP task consumes RS485 bytes.
 - USART1 RX receive path: the unused byte receive buffer and receive restart
   path are removed. USART1 remains TX-only debug output for the duplicated
   24-byte telemetry frame.
-- Dormant BSP compile entries: `bsp_RGBLight.c`, `bsp_siic.c`, `bsp_can.c`,
-  `bsp_key.c`, `bsp_RTOSdebug.c`, and `bsp_led.c` are no longer compiled by the
-  current Keil target. Their source files remain under `WHEELTEC_BSP/`.
+- Legacy robot selection/runtime state: `robot_select_init.*`,
+  `Robot_Select()`, `RobotHardWareParam`, and `RobotControlParam` are replaced
+  by `app_runtime_state.*`. Ackermann geometry now comes only from the
+  `g_orin_ackermann_*` defaults/overrides in `servo_basic_control.c`.
+- Dormant BSP compile entries: `bsp_RGBLight.c`, `bsp_siic.c`, `bsp_key.c`,
+  `bsp_RTOSdebug.c`, and `bsp_led.c` are no longer compiled by the current Keil
+  target. Their source files remain under `WHEELTEC_BSP/`; CAN BSP source is
+  deleted from the current cleanup version.
 - Hall debug telemetry: removed the 32-byte Hall debug frame and
   IRQ/Callback/accepted-edge debug counters so UART4 stays on the fixed ROS
   frame contract.

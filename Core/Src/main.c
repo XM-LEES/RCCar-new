@@ -35,7 +35,6 @@
 
 #include "hall_speed.h"
 #include "servo_basic_control.h"
-#include "robot_select_init.h"
 
 /* USER CODE END Includes */
 
@@ -207,9 +206,6 @@ int main(void)
   App_DetectHardwareVersion(oled);
   App_StartInputInterrupts();
 
-  HAL_Delay(500);
-  Robot_Select();
-	
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -286,27 +282,6 @@ int fputc(int ch,FILE* stream)
 {
 	while( HAL_OK != HAL_UART_Transmit(DebugSerial,(const uint8_t *)&ch,1,100));
 	return ch;
-}
-
-//鑾峰彇纭欢鐗堟湰
-uint8_t get_HardWareVersion(void)
-{
-	return HardWareVersion;
-}
-
-//鑾峰彇鎬ュ仠寮€鍏崇姸鎬?涓庣増鏈浉鍏?
-GPIO_PinState get_EnKeyState(void)
-{
-	if( HardWareVersion == HW_1_0 )
-	{
-		return HAL_GPIO_ReadPin(ENKey_V1_0_GPIO_Port,ENKey_V1_0_Pin);
-	}
-	else if( HardWareVersion == HW_1_1 )
-	{
-		return HAL_GPIO_ReadPin(ENKey_GPIO_Port,ENKey_Pin);
-	}
-	
-	return GPIO_PIN_RESET;
 }
 
 /* USER CODE END 4 */

@@ -31,20 +31,20 @@ the current `main` branch.
 | RGB APP runtime | `RGBControl_task` was still created, and `SerialControlTask` wrote `userdefine_rgb` on `cmd1=4`. | Deleted `RGBStripControl_task.*`, removed the task from startup/Keil, and kept `cmd1=4` as an ignored compatibility frame. |
 | Legacy RC joystick | `rc_joystick.c` was still in Keil, but TIM4 input capture dispatch only calls `ServoRC_IC_CaptureCallback()`. | Deleted `rc_joystick.*`; active RC takeover remains `servo_rc_capture.c`. |
 | Legacy `RobotControl_task` compatibility | The task was not created; only reset/log helpers were still used by serial control. | Deleted `RobotControl_task.*` and moved the reset/log parsing helpers into `SerialControl_task.c`. |
-| Legacy CAN servo drive build entry | `bsp_ServoDrive.c` depended on `g_xQueueCANopenCallback`, but startup did not allocate that queue and the current APP does not call the driver. | Removed `bsp_ServoDrive.c` from Keil build and removed the unused queue globals; BSP source remains for reference. |
+| Legacy CAN servo drive | `bsp_ServoDrive.c` depended on `g_xQueueCANopenCallback`, but startup did not allocate that queue and the current APP does not call the driver. | Removed the Keil entry first, then deleted `bsp_ServoDrive.*` from the current cleanup version. Restore from git history or vendor source if needed. |
 | `reportErr_task.c` | The task was not created and depended on Bluetooth/App, AutoRecharge, old CAN servo diagnostics, and removed command sources. | Deleted the stale report task and removed its Keil entry. |
 | `can_callback.c` | Active cleanup no longer starts the old `WHEELTEC_APP` CAN callback path, and current App code does not call the BSP CAN receive helpers. | Deleted the stale App callback file without modifying the BSP layer. Reintroduce CAN receive handling only from `WHEELTEC_APP` if a future App feature needs it. |
-| CAN current target | User confirmed CAN is not used, while `main.c`, IRQ files, HAL config, Keil project files, and `WHEELTEC.ioc` still described CAN1/CAN2 as active peripherals. | Removed CAN startup calls, CAN IRQ handlers, the HAL CAN module switch, Keil `can.c` / `stm32f4xx_hal_can.c` entries, and IOC CAN pins/NVIC/IP config. Historical CAN source files remain out of the current target. |
+| CAN current target | User confirmed CAN is not used, while `main.c`, IRQ files, HAL config, Keil project files, and `WHEELTEC.ioc` still described CAN1/CAN2 as active peripherals. | Removed CAN startup calls, CAN IRQ handlers, the HAL CAN module switch, Keil `can.c` / `stm32f4xx_hal_can.c` entries, IOC CAN pins/NVIC/IP config, generated `Core/Src/can.c` / `Core/Inc/can.h`, and CAN BSP source from the current cleanup version. Restore from git history or vendor source if needed. |
 | USART3/RS485 current target | USART3 initialized PB10/PB11, RX DMA, and IRQ, but the UART callback only restarted receive and no task consumed `rs485_buffer`. | Removed USART3 startup, RX DMA/IRQ, PB10/PB11 USART3 pin config, and IOC USART3 config. |
 | USART1 RX path | USART1 TX is useful for debug telemetry, but RX was only restarted and never consumed. | Kept USART1 TX DMA/debug output and removed USART1 RX receive startup, PA10 RX config, and the unused byte buffer. |
+| Legacy robot runtime state | `robot_select_init.*` only populated a vendor-style model/geometry cache that no current control path read. | Replaced it with `app_runtime_state.*`, which keeps only voltage, debug level, and UART DMA busy/error counters. |
 | Hall debug telemetry | The 32-byte debug frame was diagnostic-only and conflicted with the fixed ROS UART4 parser contract if mixed into the stream. | Deleted the debug frame path plus IRQ/Callback/accepted-edge counters; kept `g_hall_speed_state` for Keil Watch/OLED diagnosis. |
 
 ## Still Present But Not Primary Motion Control
 
 | Module | Current evidence | Follow-up constraint |
 | --- | --- | --- |
-| `bsp_ServoDrive.c` | Source remains under `WHEELTEC_BSP`, but it is no longer in the Keil build. | Re-enable only together with CAN Core/HAL config, its CAN callback queue, and an app-level owner. |
-| Dormant BSP sources | `bsp_RGBLight.c`, `bsp_siic.c`, `bsp_can.c`, `bsp_key.c`, `bsp_RTOSdebug.c`, and `bsp_led.c` remain under `WHEELTEC_BSP`, but current APP code does not call their runtime interfaces. | Re-enable by adding both the BSP file and the APP-level feature owner back to the Keil project; CAN additionally requires restoring Core/IOC/HAL CAN support. |
+| Dormant BSP sources | `bsp_RGBLight.c`, `bsp_siic.c`, `bsp_key.c`, `bsp_RTOSdebug.c`, and `bsp_led.c` remain under `WHEELTEC_BSP`, but current APP code does not call their runtime interfaces. | Re-enable by adding both the BSP file and the APP-level feature owner back to the Keil project. CAN support must be restored from git history or vendor source first. |
 | `bsp_flash.c` | Still compiled in the current Keil target. Current APP no longer reads the old default-speed or line-diff values at startup. | Keep as the board-supported path for future power-off parameter persistence. |
 | TIM9/TIM11 RGB pin setup | Core still initializes the board RGB PWM pins, but RGB BSP is not compiled and no RGB task starts. | Keep as board-reserved hardware configuration unless the physical RGB connector must be freed. |
 | PB6/PB7 IIC GPIO setup | Core still initializes the software IIC pins high, but software IIC BSP is not compiled and OLED uses separate pins. | Keep as board-reserved IIC configuration unless the pins are needed for another function. |
@@ -64,7 +64,9 @@ the project contract.
 1. Rebuild with Keil to confirm the pruned project file compiles on the target
    toolchain.
 2. Audit dormant BSP helpers separately if needed, especially software I2C,
-   RGB, key/LED, RTOS debug, and the retained historical CAN/ServoDrive source.
+   RGB, key/LED, and RTOS debug. CAN/ServoDrive support is no longer present in
+   the current source tree and must be restored from git history or vendor code
+   before it can be audited or reused.
 3. Recheck `WHEELTEC.ioc` before any future CubeMX regeneration; it is now
    aligned with this cleanup state and no longer configures USB Host,
    USB OTG FS, Bluetooth/App USART2, Ranger TIM2/TIM3, Ranger GPIO, CAN1/2, or

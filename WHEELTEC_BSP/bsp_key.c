@@ -3,7 +3,13 @@
 
 static uint8_t keyValue(void)
 {
-	if( get_HardWareVersion() == HW_1_1 )
+	uint8_t version = 0U;
+
+	version |= (uint8_t)(HAL_GPIO_ReadPin(VersionBit2_GPIO_Port, VersionBit2_Pin) << 2);
+	version |= (uint8_t)(HAL_GPIO_ReadPin(VersionBit1_GPIO_Port, VersionBit1_Pin) << 1);
+	version |= (uint8_t)(HAL_GPIO_ReadPin(VersionBit0_GPIO_Port, VersionBit0_Pin) << 0);
+
+	if( version == 0U )
 		return HAL_GPIO_ReadPin(UserKey_GPIO_Port,UserKey_Pin);
 	else
 		return HAL_GPIO_ReadPin(UserKey_V1_0_Port,UserKey_V1_0_Pin);

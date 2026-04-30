@@ -3,7 +3,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "bsp_adc.h"
-#include "robot_select_init.h"
+#include "app_runtime_state.h"
 #include "servo_basic_control.h"
 
 extern uint8_t Calculate_BCC(const uint8_t* checkdata, uint16_t datalen);
@@ -20,8 +20,19 @@ static UART_HandleTypeDef *serial = &huart4;
 
 static void update_power_state(void)
 {
-    RobotControlParam.Vol = (float)USER_ADC_Get_AdcBufValue(userconfigADC_VOL_CHANNEL) / 4095.0f * 3.3f * 11.0f;
-    RobotControlParam.LowPowerFlag = (RobotControlParam.Vol < 11.0f) ? 1U : 0U;
+    g_app_runtime_state.voltage_v = (float)USER_ADC_Get_AdcBufValue(userconfigADC_VOL_CHANNEL) / 4095.0f * 3.3f * 11.0f;
+}
+
+static void record_uart_tx_status(HAL_StatusTypeDef status, uint32_t *busy_count, uint32_t *error_count)
+{
+    if (status == HAL_BUSY)
+    {
+        (*busy_count)++;
+    }
+    else if (status != HAL_OK)
+    {
+        (*error_count)++;
+    }
 }
 
 void RobotDataTransmitTask(void* param)
@@ -60,16 +71,22 @@ void RobotDataTransmitTask(void* param)
         {
             basebuffer[i] = 0U;
         }
-        basebuffer[20] = (uint8_t)(((int16_t)(RobotControlParam.Vol * 1000.0f)) >> 8);
-        basebuffer[21] = (uint8_t)((int16_t)(RobotControlParam.Vol * 1000.0f));
+        basebuffer[20] = (uint8_t)(((int16_t)(g_app_runtime_state.voltage_v * 1000.0f)) >> 8);
+        basebuffer[21] = (uint8_t)((int16_t)(g_app_runtime_state.voltage_v * 1000.0f));
         basebuffer[22] = Calculate_BCC(basebuffer, 22U);
         basebuffer[23] = BaseFRAME_TAIL;
 
-        HAL_UART_Transmit_DMA(serial, basebuffer, BaseFRAME_LEN);
+        record_uart_tx_status(
+            HAL_UART_Transmit_DMA(serial, basebuffer, BaseFRAME_LEN),
+            &g_app_runtime_state.uart4_tx_busy_count,
+            &g_app_runtime_state.uart4_tx_error_count);
 
-        if (RobotControlParam.DebugLevel == 0U)
+        if (g_app_runtime_state.debug_level == 0U)
         {
-            HAL_UART_Transmit_DMA(&huart1, basebuffer, BaseFRAME_LEN);
+            record_uart_tx_status(
+                HAL_UART_Transmit_DMA(&huart1, basebuffer, BaseFRAME_LEN),
+                &g_app_runtime_state.usart1_debug_tx_busy_count,
+                &g_app_runtime_state.usart1_debug_tx_error_count);
         }
 
         vTaskDelayUntil(&preTime, pdMS_TO_TICKS((1000.0f / (float)TaskFreq)));

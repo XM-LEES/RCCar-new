@@ -157,6 +157,12 @@
 - `g_orin_state.feedback_vx_mps`
 - `g_orin_state.feedback_vz_rad_s`
 - `g_orin_feedback_scale`
+- `g_app_runtime_state.voltage_v`
+- `g_app_runtime_state.debug_level`
+- `g_app_runtime_state.uart4_tx_busy_count`
+- `g_app_runtime_state.uart4_tx_error_count`
+- `g_app_runtime_state.usart1_debug_tx_busy_count`
+- `g_app_runtime_state.usart1_debug_tx_error_count`
 - `TIM8->CCR1`
 - `TIM8->CCR2`
 
@@ -177,10 +183,11 @@
 - ICM20948/IMU：删除 ICM 驱动、寄存器定义和 IMU 任务；ROS 上行 24 字节帧保留 IMU 占位并固定填 `0`
 - RGB APP 运行时：删除 `RGBStripControl_task.*`，ROS `cmd1=4` RGB 帧保持兼容但当前忽略
 - 旧 RC joystick 和旧 `RobotControl_task` 兼容层：删除旧输入采集、旧控制队列和旧任务；reset/log 串口 helper 已内联到 `SerialControl_task.c`
-- 旧 CAN 舵机驱动编译入口：`bsp_ServoDrive.c` 从 Keil 工程移出，源码保留为 BSP 历史参考
-- CAN 当前工程入口：`MX_CAN1_Init()` / `MX_CAN2_Init()`、CAN IRQ、HAL CAN 编译开关、Keil `can.c` / `stm32f4xx_hal_can.c` 编译项和 `WHEELTEC.ioc` CAN 配置已移除；`Core/Src/can.c` 与 BSP CAN 源码仅作为历史参考保留
+- 旧 CAN 舵机驱动：`bsp_ServoDrive.*` 已在当前清理版本删除，未来需要时从 git 历史或厂家参考代码恢复
+- 旧车型选择/运行参数层：删除 `robot_select_init.*`、`Robot_Select()`、`RobotHardWareParam` 和 `RobotControlParam`；当前只保留 `app_runtime_state.*` 里的电压、debug level 和 UART DMA 统计
+- CAN 当前工程入口：`MX_CAN1_Init()` / `MX_CAN2_Init()`、CAN IRQ、HAL CAN 编译开关、Keil `can.c` / `stm32f4xx_hal_can.c` 编译项和 `WHEELTEC.ioc` CAN 配置已移除；当前清理版本同时删除 `Core/Src/can.c` / `Core/Inc/can.h`，未来需要 CAN 时从 git 历史或厂家参考代码恢复
 - USART3/RS485 当前入口：移除 `MX_USART3_UART_Init()`、USART3 RX DMA、USART3 IRQ、PB10/PB11 USART3 引脚和 `WHEELTEC.ioc` USART3 配置；当前上位机链路只走 `UART4`
-- 未被当前 APP 调用的 BSP 编译入口：`bsp_RGBLight.c`、`bsp_siic.c`、`bsp_can.c`、`bsp_key.c`、`bsp_RTOSdebug.c`、`bsp_led.c` 已从 Keil 工程移出，源码保留
+- 未被当前 APP 调用的 BSP 编译入口：`bsp_RGBLight.c`、`bsp_siic.c`、`bsp_key.c`、`bsp_RTOSdebug.c`、`bsp_led.c` 已从 Keil 工程移出，源码保留；CAN BSP 源码已删除
 - Hall 32 字节调试帧和 IRQ/Callback/有效边沿调试计数：删除串口混发风险，仅保留 `g_hall_speed_state`
 - `WHEELTEC.ioc` 已同步移除 USB Host、USB OTG FS、Bluetooth/App USART2、USART2 TX DMA、Ranger TIM2/TIM3、超声波 GPIO、CAN1/CAN2、CAN NVIC、CAN 引脚、USART3/RS485 和 USART1 RX
 

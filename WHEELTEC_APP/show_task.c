@@ -5,7 +5,7 @@
 #include "bsp_oled.h"
 #include "bsp_adc.h"
 #include "hall_speed.h"
-#include "robot_select_init.h"
+#include "app_runtime_state.h"
 #include "servo_basic_control.h"
 
 static pOLEDInterface_t oled = &UserOLED;
@@ -73,7 +73,7 @@ static void show_debug_status(void)
 
     oled->ShowString(0, 24, "                ");
     oled->ShowString(0, 24, "V");
-    oled->ShowFloat(8, 24, RobotControlParam.Vol, 2, 2);
+    oled->ShowFloat(8, 24, g_app_runtime_state.voltage_v, 2, 2);
     oled->ShowString(64, 24, "A");
     show_u4_zero_padded(72, 24, adc_vol);
 

@@ -11,7 +11,7 @@
 
 #include "bsp_buzzer.h"
 #include "main.h"
-#include "robot_select_init.h"
+#include "app_runtime_state.h"
 #include "servo_basic_control.h"
 
 #define ROS_CMD_FRAME_LEN 11U
@@ -98,11 +98,11 @@ static void serial_control_set_debug_level(char uart_recv)
 
 	switch (log_buf[3])
 	{
-	case '0': RobotControlParam.DebugLevel = 0U; break;
-	case '1': RobotControlParam.DebugLevel = 1U; break;
-	case '2': RobotControlParam.DebugLevel = 2U; break;
-	case '3': RobotControlParam.DebugLevel = 3U; break;
-	default:  RobotControlParam.DebugLevel = 0U; break;
+	case '0': g_app_runtime_state.debug_level = 0U; break;
+	case '1': g_app_runtime_state.debug_level = 1U; break;
+	case '2': g_app_runtime_state.debug_level = 2U; break;
+	case '3': g_app_runtime_state.debug_level = 3U; break;
+	default:  g_app_runtime_state.debug_level = 0U; break;
 	}
 
 	{
@@ -164,9 +164,6 @@ void SerialControlTask(void *param)
 		{
 			continue;
 		}
-
-		RobotControlParam.SecurityLevel = roscmdBuf[2] & 0x01U;
-		RobotControlParam.softwareEnflag = (roscmdBuf[2] & 0x80U) ? 1U : 0U;
 
 		{
 			const float vx_mps = (float)((int16_t)(((uint16_t)roscmdBuf[3] << 8) | roscmdBuf[4])) / 1000.0f;
