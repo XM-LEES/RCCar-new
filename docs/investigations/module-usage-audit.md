@@ -37,17 +37,16 @@ the current `main` branch.
 | CAN current target | User confirmed CAN is not used, while `main.c`, IRQ files, HAL config, Keil project files, and `WHEELTEC.ioc` still described CAN1/CAN2 as active peripherals. | Removed CAN startup calls, CAN IRQ handlers, the HAL CAN module switch, Keil `can.c` / `stm32f4xx_hal_can.c` entries, IOC CAN pins/NVIC/IP config, generated `Core/Src/can.c` / `Core/Inc/can.h`, and CAN BSP source from the current cleanup version. Restore from git history or vendor source if needed. |
 | USART3/RS485 current target | USART3 initialized PB10/PB11, RX DMA, and IRQ, but the UART callback only restarted receive and no task consumed `rs485_buffer`. | Removed USART3 startup, RX DMA/IRQ, PB10/PB11 USART3 pin config, and IOC USART3 config. |
 | USART1 RX path | USART1 TX is useful for debug telemetry, but RX was only restarted and never consumed. | Kept USART1 TX DMA/debug output and removed USART1 RX receive startup, PA10 RX config, and the unused byte buffer. |
-| Legacy robot runtime state | `robot_select_init.*` only populated a vendor-style model/geometry cache that no current control path read. | Replaced it with `app_runtime_state.*`, which keeps only voltage, debug level, and UART DMA busy/error counters. |
+| Legacy robot runtime state | `robot_select_init.*` only populated a vendor-style model/geometry cache that no current control path read. | Replaced it with `app_runtime_state.*`, which keeps only voltage, debug level, and UART DMA busy/error counters. Vehicle/Orin defaults now live in `app_vehicle_config.h`. |
+| Dormant BSP source | RGBLight, software IIC, EEPROM, UserKey, UserLED, and RTOS debug source remained in the repo but were not part of the current Keil target or APP flow. | Deleted `bsp_RGBLight.*`, `bsp_siic.*`, `bsp_eeprom.*`, `bsp_key.*`, `bsp_led.*`, and `bsp_RTOSdebug.*`; restore from git history or vendor code only with a new APP owner. |
+| Dormant Core/IOC hardware setup | TIM9/TIM11 RGB PWM, PB6/PB7 software IIC, UserKey, UserLED, and ENKey were configured but unused by the current product APP. | Removed the unused init calls, GPIO/timer setup, macros, and IOC entries while keeping VersionBit board-version detection. |
 | Hall debug telemetry | The 32-byte debug frame was diagnostic-only and conflicted with the fixed ROS UART4 parser contract if mixed into the stream. | Deleted the debug frame path plus IRQ/Callback/accepted-edge counters; kept `g_hall_speed_state` for Keil Watch/OLED diagnosis. |
 
 ## Still Present But Not Primary Motion Control
 
 | Module | Current evidence | Follow-up constraint |
 | --- | --- | --- |
-| Dormant BSP sources | `bsp_RGBLight.c`, `bsp_siic.c`, `bsp_key.c`, `bsp_RTOSdebug.c`, and `bsp_led.c` remain under `WHEELTEC_BSP`, but current APP code does not call their runtime interfaces. | Re-enable by adding both the BSP file and the APP-level feature owner back to the Keil project. CAN support must be restored from git history or vendor source first. |
 | `bsp_flash.c` | Still compiled in the current Keil target. Current APP no longer reads the old default-speed or line-diff values at startup. | Keep as the board-supported path for future power-off parameter persistence. |
-| TIM9/TIM11 RGB pin setup | Core still initializes the board RGB PWM pins, but RGB BSP is not compiled and no RGB task starts. | Keep as board-reserved hardware configuration unless the physical RGB connector must be freed. |
-| PB6/PB7 IIC GPIO setup | Core still initializes the software IIC pins high, but software IIC BSP is not compiled and OLED uses separate pins. | Keep as board-reserved IIC configuration unless the pins are needed for another function. |
 
 ## Protocol Documentation Note
 
@@ -63,11 +62,9 @@ the project contract.
 
 1. Rebuild with Keil to confirm the pruned project file compiles on the target
    toolchain.
-2. Audit dormant BSP helpers separately if needed, especially software I2C,
-   RGB, key/LED, and RTOS debug. CAN/ServoDrive support is no longer present in
-   the current source tree and must be restored from git history or vendor code
-   before it can be audited or reused.
+2. Reintroduce deleted BSP helpers only from git history or vendor code, and
+   only together with an APP-level owner that calls them.
 3. Recheck `WHEELTEC.ioc` before any future CubeMX regeneration; it is now
    aligned with this cleanup state and no longer configures USB Host,
-   USB OTG FS, Bluetooth/App USART2, Ranger TIM2/TIM3, Ranger GPIO, CAN1/2, or
-   USART3/RS485.
+   USB OTG FS, Bluetooth/App USART2, Ranger TIM2/TIM3, Ranger GPIO, CAN1/2,
+   USART3/RS485, TIM9/TIM11, RGB PWM, software IIC, UserKey, UserLED, or ENKey.

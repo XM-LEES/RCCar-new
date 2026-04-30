@@ -10,9 +10,8 @@ and CAN runtime source paths.
   files, and FreeRTOS task creation.
 - `WHEELTEC_APP/` contains vehicle behavior: serial command parsing, Ackermann
   PWM control, RC capture, hall speed feedback, telemetry, and OLED display.
-- `WHEELTEC_BSP/` contains board support source for OLED, ADC, DWT, CAN,
-  flash, RGB, buzzer, software I2C, and older CAN servo drive helpers. Only
-  the subset needed by the current APP is compiled by the Keil project.
+- `WHEELTEC_BSP/` contains only board support source needed by the current
+  product APP: OLED, ADC, DWT, flash, and buzzer.
 - `Drivers/` and `Middlewares/` are vendor HAL/CMSIS/FreeRTOS libraries.
   STM32 USB Host middleware remains as vendor code, but it is no longer in the
   Keil build.
@@ -29,11 +28,11 @@ and CAN runtime source paths.
 
 `Core/Src/main.c` performs the hardware setup and starts FreeRTOS:
 
-1. Initializes GPIO, DMA, UART1 TX debug, UART4 ROS, TIM4/6/8/9/11, and ADC.
+1. Initializes GPIO, DMA, UART1 TX debug, UART4 ROS, TIM4/6/8, and ADC.
 2. Calls `ServoBasic_Init()`, `DWT_Init()`, `HallSpeed_Init()`, and
    `ADC_Userconfig_Init()`.
 3. Starts TIM6 for runtime stats and initializes the OLED.
-4. Detects the C63x hardware version and adjusts pin setup for v1.0 boards.
+4. Detects the C63x hardware version and stops on unknown board versions.
 5. Starts TIM4 input capture on CH1/CH2/CH3 for RC throttle, steering, and
    guard input.
 6. Starts byte-wise UART receive interrupts on UART4 only.
@@ -111,8 +110,8 @@ Keil project:
   files. The ROS 24-byte frame length is unchanged; the former IMU bytes are
   fixed zero placeholders.
 - RGB APP runtime: `RGBStripControl_task.*` and runtime RGB command state. TIM9
-  and TIM11 still exist in the CubeMX/Core setup; RGB BSP source is retained but
-  no longer compiled into the current Keil target.
+  and TIM11 RGB PWM setup plus RGB BSP source are removed from the current
+  product APP.
 - Legacy RC joystick and RobotControl compatibility: `rc_joystick.*` and
   `RobotControl_task.*`; serial reset/log helpers now live in
   `SerialControl_task.c`.
@@ -133,12 +132,15 @@ Keil project:
   24-byte telemetry frame.
 - Legacy robot selection/runtime state: `robot_select_init.*`,
   `Robot_Select()`, `RobotHardWareParam`, and `RobotControlParam` are replaced
-  by `app_runtime_state.*`. Ackermann geometry now comes only from the
-  `g_orin_ackermann_*` defaults/overrides in `servo_basic_control.c`.
-- Dormant BSP compile entries: `bsp_RGBLight.c`, `bsp_siic.c`, `bsp_key.c`,
-  `bsp_RTOSdebug.c`, and `bsp_led.c` are no longer compiled by the current Keil
-  target. Their source files remain under `WHEELTEC_BSP/`; CAN BSP source is
-  deleted from the current cleanup version.
+  by `app_runtime_state.*`. Ackermann geometry defaults now come from
+  `app_vehicle_config.h`, with `g_orin_ackermann_*` still available as Keil
+  Watch overrides.
+- Current-product BSP boundary: `bsp_RGBLight.*`, `bsp_siic.*`,
+  `bsp_eeprom.*`, `bsp_key.*`, `bsp_RTOSdebug.*`, and `bsp_led.*` are removed
+  from source. Restore them from git history or vendor source only with a new
+  APP owner.
+- Current-product Core/IOC boundary: TIM9/TIM11 RGB PWM, PB6/PB7 software IIC,
+  UserKey, UserLED, and ENKey setup are removed. VersionBit detection remains.
 - Hall debug telemetry: removed the 32-byte Hall debug frame and
   IRQ/Callback/accepted-edge debug counters so UART4 stays on the fixed ROS
   frame contract.
@@ -157,12 +159,9 @@ Dormant flash-backed parameter storage is intentionally kept available for
 future power-off persistence. The current APP no longer reads the old default
 speed or line-diff parameters at startup.
 
-TIM9/TIM11 RGB PWM pin setup and PB6/PB7 IIC GPIO setup remain in Core as
-board-reserved hardware configuration. Their BSP runtime sources are not in the
-current Keil target, so they do not create APP tasks or control behavior.
-
-Dormant BSP source is kept for board recovery or future feature work, but must
-be re-added to the Keil project together with the APP owner that calls it.
+Unused board-helper BSP source is not kept in the current product APP. Restore
+deleted helpers from git history or vendor source together with the APP owner
+that calls them.
 
 The active RC receiver takeover path remains separate from the removed USB HID
 gamepad path.
@@ -176,12 +175,13 @@ gamepad path.
   Keil project file as the first evidence sources for whether code is active.
 - Split shared globals or utility functions before deleting old task modules
   that still define data used by active code.
-- Keep dormant BSP source out of the Keil build when the current APP does not
-  allocate its queues or call its runtime entrypoints.
+- Keep unused BSP source out of the current product APP when no runtime owner
+  calls it.
 - Keep vendor libraries and build artifacts out of source cleanup commits.
 - `WHEELTEC.ioc` is aligned with the cleanup state: USB Host, USB OTG FS,
   Bluetooth/App USART2, USART2 TX DMA, Ranger TIM2/TIM3, Ranger GPIO, CAN1/2,
-  CAN NVIC, CAN pins, USART3/RS485, and USART1 RX are no longer configured.
+  CAN NVIC, CAN pins, USART3/RS485, USART1 RX, TIM9/TIM11, RGB PWM pins,
+  PB6/PB7 software IIC, UserKey, UserLED, and ENKey are no longer configured.
   Keep UART4 telemetry at 24 bytes and ROS commands at 11 bytes unless the
   upper-computer parser is changed at the same time.
 - Do not remove `DWT` as part of IMU cleanup; hall speed timing still depends on

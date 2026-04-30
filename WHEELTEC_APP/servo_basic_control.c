@@ -8,6 +8,7 @@
 #include <math.h>
 #include "FreeRTOS.h"
 #include "task.h"
+#include "app_vehicle_config.h"
 #include "hall_speed.h"
 #include "servo_rc_capture.h"
 
@@ -23,36 +24,36 @@ static servo_basic_state_t g_state = {
 	0U
 };
 
-#define RC_OVERRIDE_CENTER_DEFAULT_US             1500U
-#define RC_OVERRIDE_ENTER_THRESHOLD_DEFAULT_US     60U
-#define RC_OVERRIDE_EXIT_THRESHOLD_DEFAULT_US      40U
-#define RC_OVERRIDE_ENTER_SAMPLES_DEFAULT           2U
-#define RC_OVERRIDE_RELEASE_HOLD_DEFAULT_MS       500U
-#define RC_GUARD_ACTIVE_LOW_THRESHOLD_DEFAULT_US 1300U
-#define RC_GUARD_ACTIVE_HIGH_THRESHOLD_DEFAULT_US 1700U
-#define ORIN_ACKERMANN_WHEELBASE_DEFAULT_MM       540U
-#define ORIN_ACKERMANN_TRACK_WIDTH_DEFAULT_MM     480U
-#define ORIN_ACKERMANN_WHEEL_RADIUS_DEFAULT_MM    110U
-#define ORIN_ACKERMANN_MAX_STEERING_DEFAULT_MRAD  393U
-#define ORIN_ACKERMANN_MIN_VX_DEFAULT_MMPS         50U
-#define ORIN_VX_SCALE_DEFAULT_PERMILLE           1000U
-#define ORIN_FEEDBACK_SCALE_DEFAULT_PERMILLE     1254U
-#define ORIN_VX_FORWARD_CAP_DEFAULT_MMPS         2000U
-#define ORIN_VX_REVERSE_CAP_DEFAULT_MMPS         2000U
-#define ORIN_VX_DEADBAND_DEFAULT_MMPS              50U
-#define ORIN_ESC_FORWARD_START_DEFAULT_US        1560U
-#define ORIN_ESC_REVERSE_START_DEFAULT_US        1440U
-#define ORIN_ESC_FORWARD_MAX_DEFAULT_US          1650U
-#define ORIN_ESC_REVERSE_MAX_DEFAULT_US          1350U
-#define RC_VALID_MIN_DEFAULT_US                   900U
-#define RC_VALID_MAX_DEFAULT_US                  2100U
-#define RC_FRAME_MIN_DEFAULT_US                  5000U
-#define RC_FRAME_MAX_DEFAULT_US                 30000U
-#define RC_GLITCH_FREEZE_DEFAULT_MS              100U
-#define RC_THROTTLE_NEUTRAL_HOLD_DEFAULT_US       25U
-#define RC_THROTTLE_JUMP_CONFIRM_DEFAULT_US       40U
-#define RC_STEERING_JUMP_CONFIRM_DEFAULT_US       80U
-#define RC_JUMP_CONFIRM_SAMPLES_DEFAULT            2U
+#define RC_OVERRIDE_CENTER_DEFAULT_US            APP_RC_OVERRIDE_CENTER_US
+#define RC_OVERRIDE_ENTER_THRESHOLD_DEFAULT_US   APP_RC_OVERRIDE_ENTER_THRESHOLD_US
+#define RC_OVERRIDE_EXIT_THRESHOLD_DEFAULT_US    APP_RC_OVERRIDE_EXIT_THRESHOLD_US
+#define RC_OVERRIDE_ENTER_SAMPLES_DEFAULT        APP_RC_OVERRIDE_ENTER_SAMPLES
+#define RC_OVERRIDE_RELEASE_HOLD_DEFAULT_MS      APP_RC_OVERRIDE_RELEASE_HOLD_MS
+#define RC_GUARD_ACTIVE_LOW_THRESHOLD_DEFAULT_US APP_RC_GUARD_ACTIVE_LOW_THRESHOLD_US
+#define RC_GUARD_ACTIVE_HIGH_THRESHOLD_DEFAULT_US APP_RC_GUARD_ACTIVE_HIGH_THRESHOLD_US
+#define ORIN_ACKERMANN_WHEELBASE_DEFAULT_MM      APP_ORIN_ACKERMANN_WHEELBASE_MM
+#define ORIN_ACKERMANN_TRACK_WIDTH_DEFAULT_MM    APP_ORIN_ACKERMANN_TRACK_WIDTH_MM
+#define ORIN_ACKERMANN_WHEEL_RADIUS_DEFAULT_MM   APP_ORIN_ACKERMANN_WHEEL_RADIUS_MM
+#define ORIN_ACKERMANN_MAX_STEERING_DEFAULT_MRAD APP_ORIN_ACKERMANN_MAX_STEERING_MRAD
+#define ORIN_ACKERMANN_MIN_VX_DEFAULT_MMPS       APP_ORIN_ACKERMANN_MIN_VX_MMPS
+#define ORIN_VX_SCALE_DEFAULT_PERMILLE           APP_ORIN_VX_SCALE_PERMILLE
+#define ORIN_FEEDBACK_SCALE_DEFAULT_PERMILLE     APP_ORIN_FEEDBACK_SCALE_PERMILLE
+#define ORIN_VX_FORWARD_CAP_DEFAULT_MMPS         APP_ORIN_VX_FORWARD_CAP_MMPS
+#define ORIN_VX_REVERSE_CAP_DEFAULT_MMPS         APP_ORIN_VX_REVERSE_CAP_MMPS
+#define ORIN_VX_DEADBAND_DEFAULT_MMPS            APP_ORIN_VX_DEADBAND_MMPS
+#define ORIN_ESC_FORWARD_START_DEFAULT_US        APP_ORIN_ESC_FORWARD_START_US
+#define ORIN_ESC_REVERSE_START_DEFAULT_US        APP_ORIN_ESC_REVERSE_START_US
+#define ORIN_ESC_FORWARD_MAX_DEFAULT_US          APP_ORIN_ESC_FORWARD_MAX_US
+#define ORIN_ESC_REVERSE_MAX_DEFAULT_US          APP_ORIN_ESC_REVERSE_MAX_US
+#define RC_VALID_MIN_DEFAULT_US                  APP_RC_VALID_MIN_US
+#define RC_VALID_MAX_DEFAULT_US                  APP_RC_VALID_MAX_US
+#define RC_FRAME_MIN_DEFAULT_US                  APP_RC_FRAME_MIN_US
+#define RC_FRAME_MAX_DEFAULT_US                  APP_RC_FRAME_MAX_US
+#define RC_GLITCH_FREEZE_DEFAULT_MS              APP_RC_GLITCH_FREEZE_MS
+#define RC_THROTTLE_NEUTRAL_HOLD_DEFAULT_US      APP_RC_THROTTLE_NEUTRAL_HOLD_US
+#define RC_THROTTLE_JUMP_CONFIRM_DEFAULT_US      APP_RC_THROTTLE_JUMP_CONFIRM_US
+#define RC_STEERING_JUMP_CONFIRM_DEFAULT_US      APP_RC_STEERING_JUMP_CONFIRM_US
+#define RC_JUMP_CONFIRM_SAMPLES_DEFAULT          APP_RC_JUMP_CONFIRM_SAMPLES
 
 // Debug trigger variables (set from Keil Watch/Command).
 volatile uint32_t g_debug_servo_trigger = 0U;
@@ -61,12 +62,12 @@ volatile uint32_t g_debug_servo_cmd = SERVO_CMD_SET_SERVO_ANGLE;
 volatile uint32_t g_debug_servo_value = 90U;
 
 // RC raw PWM follow (bypass 1000-2000 us clamp when non-zero).
-volatile uint32_t g_rc_pwm_follow_raw = 0U;
+volatile uint32_t g_rc_pwm_follow_raw = APP_RC_PWM_FOLLOW_RAW_DEFAULT;
 // RC signal timeout in milliseconds (0 uses default 100 ms).
-volatile uint32_t g_rc_signal_timeout_ms = 100U;
+volatile uint32_t g_rc_signal_timeout_ms = APP_RC_SIGNAL_TIMEOUT_MS;
 // Orin kinematics to PWM settings (set from Keil Watch).
-volatile uint32_t g_orin_pwm_enable = 1U;
-volatile uint32_t g_orin_pwm_timeout_ms = 200U;
+volatile uint32_t g_orin_pwm_enable = APP_ORIN_PWM_ENABLE_DEFAULT;
+volatile uint32_t g_orin_pwm_timeout_ms = APP_ORIN_PWM_TIMEOUT_DEFAULT_MS;
 volatile uint32_t g_orin_ackermann_wheelbase_mm = ORIN_ACKERMANN_WHEELBASE_DEFAULT_MM;
 volatile uint32_t g_orin_ackermann_track_width_mm = ORIN_ACKERMANN_TRACK_WIDTH_DEFAULT_MM;
 volatile uint32_t g_orin_ackermann_wheel_radius_mm = ORIN_ACKERMANN_WHEEL_RADIUS_DEFAULT_MM;
@@ -77,20 +78,20 @@ volatile uint32_t g_orin_feedback_scale = ORIN_FEEDBACK_SCALE_DEFAULT_PERMILLE;
 volatile uint32_t g_orin_vx_forward_cap_mmps = ORIN_VX_FORWARD_CAP_DEFAULT_MMPS;
 volatile uint32_t g_orin_vx_reverse_cap_mmps = ORIN_VX_REVERSE_CAP_DEFAULT_MMPS;
 volatile uint32_t g_orin_vx_deadband_mmps = ORIN_VX_DEADBAND_DEFAULT_MMPS;
-volatile uint32_t g_orin_vx_max_mmps = 1000U;
-volatile uint32_t g_orin_vz_max_millirad = 1000U;
-volatile uint32_t g_orin_esc_center_us = ESC_PWM_NEUTRAL_PULSE_US;
-volatile uint32_t g_orin_esc_range_us = 500U;
+volatile uint32_t g_orin_vx_max_mmps = APP_ORIN_VX_MAX_DEFAULT_MMPS;
+volatile uint32_t g_orin_vz_max_millirad = APP_ORIN_VZ_MAX_DEFAULT_MRAD;
+volatile uint32_t g_orin_esc_center_us = APP_ORIN_ESC_CENTER_US;
+volatile uint32_t g_orin_esc_range_us = APP_ORIN_ESC_RANGE_US;
 volatile uint32_t g_orin_esc_forward_start_us = ORIN_ESC_FORWARD_START_DEFAULT_US;
 volatile uint32_t g_orin_esc_reverse_start_us = ORIN_ESC_REVERSE_START_DEFAULT_US;
 volatile uint32_t g_orin_esc_forward_max_us = ORIN_ESC_FORWARD_MAX_DEFAULT_US;
 volatile uint32_t g_orin_esc_reverse_max_us = ORIN_ESC_REVERSE_MAX_DEFAULT_US;
-volatile uint32_t g_orin_servo_center_us = ESC_PWM_NEUTRAL_PULSE_US;
-volatile uint32_t g_orin_servo_range_us = 500U;
+volatile uint32_t g_orin_servo_center_us = APP_ORIN_SERVO_CENTER_US;
+volatile uint32_t g_orin_servo_range_us = APP_ORIN_SERVO_RANGE_US;
 // RC debounce parameters (set from Keil Watch).
-volatile uint32_t g_rc_debounce_enable = 1U;
-volatile uint32_t g_rc_debounce_deadband_us = 5U;
-volatile uint32_t g_rc_debounce_smooth_div = 4U;
+volatile uint32_t g_rc_debounce_enable = APP_RC_DEBOUNCE_ENABLE_DEFAULT;
+volatile uint32_t g_rc_debounce_deadband_us = APP_RC_DEBOUNCE_DEADBAND_US;
+volatile uint32_t g_rc_debounce_smooth_div = APP_RC_DEBOUNCE_SMOOTH_DIV;
 volatile uint32_t g_rc_valid_min_us = RC_VALID_MIN_DEFAULT_US;
 volatile uint32_t g_rc_valid_max_us = RC_VALID_MAX_DEFAULT_US;
 volatile uint32_t g_rc_frame_min_us = RC_FRAME_MIN_DEFAULT_US;
@@ -106,8 +107,8 @@ volatile uint32_t g_rc_override_enter_threshold_us = RC_OVERRIDE_ENTER_THRESHOLD
 volatile uint32_t g_rc_override_exit_threshold_us = RC_OVERRIDE_EXIT_THRESHOLD_DEFAULT_US;
 volatile uint32_t g_rc_override_enter_samples = RC_OVERRIDE_ENTER_SAMPLES_DEFAULT;
 volatile uint32_t g_rc_override_release_hold_ms = RC_OVERRIDE_RELEASE_HOLD_DEFAULT_MS;
-volatile uint32_t g_rc_guard_enable = 1U;
-volatile uint32_t g_rc_guard_active_high = 1U;
+volatile uint32_t g_rc_guard_enable = APP_RC_GUARD_ENABLE_DEFAULT;
+volatile uint32_t g_rc_guard_active_high = APP_RC_GUARD_ACTIVE_HIGH_DEFAULT;
 volatile uint32_t g_rc_guard_active_low_threshold_us = RC_GUARD_ACTIVE_LOW_THRESHOLD_DEFAULT_US;
 volatile uint32_t g_rc_guard_active_high_threshold_us = RC_GUARD_ACTIVE_HIGH_THRESHOLD_DEFAULT_US;
 volatile uint32_t g_rc_throttle_last_good_us = ESC_PWM_NEUTRAL_PULSE_US;

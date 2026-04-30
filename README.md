@@ -63,7 +63,8 @@
 - `max_steering_angle = 0.393 rad`
 - `base_link = rear axle center`
 
-在代码中对应的运行时参数为：
+默认值集中在 `WHEELTEC_APP/Inc/app_vehicle_config.h`；代码中对应的
+Keil Watch 运行时参数为：
 - `g_orin_ackermann_wheelbase_mm`
 - `g_orin_ackermann_track_width_mm`
 - `g_orin_ackermann_wheel_radius_mm`
@@ -171,8 +172,6 @@
 - `USART1 TX` 调试输出；`USART1 RX` 不再启动接收
 - 板载 OLED 显示
 - `bsp_flash.c` 仍在 Keil 目标内保留，用作未来参数断电保存能力；当前 APP 不再读取旧默认速度/纠偏参数
-- TIM9/TIM11 硬件初始化仍在 Core 中保留；RGB 预留接口和 BSP 源码保留，但当前 Keil 目标不编译、不启动 RGB 任务
-- PB6/PB7 IIC GPIO 初始化仍在 Core 中保留；软件 IIC BSP 源码保留但当前 Keil 目标不编译，OLED 不依赖该 IIC 总线
 
 ## 已清理的旧功能
 以下旧功能已从源码和 Keil 工程编译项中移除：
@@ -187,9 +186,10 @@
 - 旧车型选择/运行参数层：删除 `robot_select_init.*`、`Robot_Select()`、`RobotHardWareParam` 和 `RobotControlParam`；当前只保留 `app_runtime_state.*` 里的电压、debug level 和 UART DMA 统计
 - CAN 当前工程入口：`MX_CAN1_Init()` / `MX_CAN2_Init()`、CAN IRQ、HAL CAN 编译开关、Keil `can.c` / `stm32f4xx_hal_can.c` 编译项和 `WHEELTEC.ioc` CAN 配置已移除；当前清理版本同时删除 `Core/Src/can.c` / `Core/Inc/can.h`，未来需要 CAN 时从 git 历史或厂家参考代码恢复
 - USART3/RS485 当前入口：移除 `MX_USART3_UART_Init()`、USART3 RX DMA、USART3 IRQ、PB10/PB11 USART3 引脚和 `WHEELTEC.ioc` USART3 配置；当前上位机链路只走 `UART4`
-- 未被当前 APP 调用的 BSP 编译入口：`bsp_RGBLight.c`、`bsp_siic.c`、`bsp_key.c`、`bsp_RTOSdebug.c`、`bsp_led.c` 已从 Keil 工程移出，源码保留；CAN BSP 源码已删除
+- 当前产品不用的 BSP 历史源码：删除 `bsp_RGBLight.*`、`bsp_siic.*`、`bsp_eeprom.*`、`bsp_key.*`、`bsp_RTOSdebug.*`、`bsp_led.*`，未来需要时从 git 历史或厂家参考代码恢复
+- 当前产品不用的 Core/IOC 硬件入口：移除 TIM9/TIM11 RGB PWM、PB6/PB7 software IIC、UserKey、UserLED 和 ENKey 配置；保留 VersionBit 硬件版本检测
 - Hall 32 字节调试帧和 IRQ/Callback/有效边沿调试计数：删除串口混发风险，仅保留 `g_hall_speed_state`
-- `WHEELTEC.ioc` 已同步移除 USB Host、USB OTG FS、Bluetooth/App USART2、USART2 TX DMA、Ranger TIM2/TIM3、超声波 GPIO、CAN1/CAN2、CAN NVIC、CAN 引脚、USART3/RS485 和 USART1 RX
+- `WHEELTEC.ioc` 已同步移除 USB Host、USB OTG FS、Bluetooth/App USART2、USART2 TX DMA、Ranger TIM2/TIM3、超声波 GPIO、CAN1/CAN2、CAN NVIC、CAN 引脚、USART3/RS485、USART1 RX、TIM9/TIM11、RGB/IIC/按键/用户 LED/ENKey
 
 保留路径不变：
 - `UART4` ROS 下行控制与 24 字节上行基础帧

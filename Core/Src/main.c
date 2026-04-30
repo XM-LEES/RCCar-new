@@ -57,8 +57,6 @@
 
 /* USER CODE BEGIN PV */
 
-static uint8_t HardWareVersion = HW_UnKnown;
-
 uint8_t rosbuffer = 0;
 
 DebugType_t g_sys_debug = { 0 };
@@ -71,7 +69,6 @@ void MX_FREERTOS_Init(void);
 static void App_InitRuntimeServices(void);
 static pOLEDInterface_t App_InitDisplay(void);
 static void App_DetectHardwareVersion(pOLEDInterface_t oled);
-static void App_ConfigHardwareV10Pins(void);
 static void App_HandleUnknownHardware(pOLEDInterface_t oled);
 static void App_StartInputInterrupts(void);
 
@@ -103,36 +100,12 @@ static void App_DetectHardwareVersion(pOLEDInterface_t oled)
   version |= (uint8_t)(HAL_GPIO_ReadPin(VersionBit1_GPIO_Port, VersionBit1_Pin) << 1);
   version |= (uint8_t)(HAL_GPIO_ReadPin(VersionBit0_GPIO_Port, VersionBit0_Pin) << 0);
 
-  if (version == 0U)
+  if (version == 0U || version == 7U)
   {
-    HardWareVersion = HW_1_1;
+    return;
   }
-  else if (version == 7U)
-  {
-    HardWareVersion = HW_1_0;
-    App_ConfigHardwareV10Pins();
-  }
-  else
-  {
-    App_HandleUnknownHardware(oled);
-  }
-}
 
-static void App_ConfigHardwareV10Pins(void)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-  HAL_GPIO_DeInit(ENKey_GPIO_Port, ENKey_Pin);
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-  GPIO_InitStruct.Pin = ENKey_V1_0_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(ENKey_V1_0_GPIO_Port, &GPIO_InitStruct);
-
-  HAL_GPIO_DeInit(UserKey_V1_0_Port, UserKey_V1_0_Pin);
-  HAL_GPIO_DeInit(UserKey_GPIO_Port, UserKey_Pin);
-  GPIO_InitStruct.Pin = UserKey_V1_0_Pin;
-  HAL_GPIO_Init(UserKey_V1_0_Port, &GPIO_InitStruct);
+  App_HandleUnknownHardware(oled);
 }
 
 static void App_HandleUnknownHardware(pOLEDInterface_t oled)
@@ -194,8 +167,6 @@ int main(void)
   MX_UART4_Init();
   MX_TIM4_Init();
   MX_TIM6_Init();
-  MX_TIM9_Init();
-  MX_TIM11_Init();
   MX_ADC1_Init();
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */

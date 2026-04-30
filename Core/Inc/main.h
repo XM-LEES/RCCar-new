@@ -41,18 +41,6 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-enum{
-	HW_UnKnown = 0, //Ӳ���汾
-	HW_1_0 , 
-	HW_1_1
-};
-
-//��ͣ����
-#define ENKey_V1_0_Pin       GPIO_PIN_0
-#define ENKey_V1_0_GPIO_Port GPIOD
-
-#define UserKey_V1_0_Pin  GPIO_PIN_3
-#define UserKey_V1_0_Port GPIOD
 
 /* USER CODE END EC */
 
@@ -71,10 +59,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define OLED_DC_Pin GPIO_PIN_4
 #define OLED_DC_GPIO_Port GPIOE
-#define LED_B_Pin GPIO_PIN_5
-#define LED_B_GPIO_Port GPIOE
-#define LED_R_Pin GPIO_PIN_6
-#define LED_R_GPIO_Port GPIOE
 #define OLED_RES_Pin GPIO_PIN_13
 #define OLED_RES_GPIO_Port GPIOC
 #define OLED_SDA_Pin GPIO_PIN_14
@@ -83,24 +67,12 @@ void Error_Handler(void);
 #define OLED_SCL_GPIO_Port GPIOC
 #define VersionBit0_Pin GPIO_PIN_12
 #define VersionBit0_GPIO_Port GPIOC
-#define UserKey_Pin GPIO_PIN_3
-#define UserKey_GPIO_Port GPIOD
 #define UserBuzzer_Pin GPIO_PIN_4
 #define UserBuzzer_GPIO_Port GPIOD
-#define UserLED_Pin GPIO_PIN_5
-#define UserLED_GPIO_Port GPIOD
 #define VersionBit1_Pin GPIO_PIN_6
 #define VersionBit1_GPIO_Port GPIOD
 #define VersionBit2_Pin GPIO_PIN_7
 #define VersionBit2_GPIO_Port GPIOD
-#define IIC_SCL_Pin GPIO_PIN_6
-#define IIC_SCL_GPIO_Port GPIOB
-#define IIC_SDA_Pin GPIO_PIN_7
-#define IIC_SDA_GPIO_Port GPIOB
-#define LED_G_Pin GPIO_PIN_9
-#define LED_G_GPIO_Port GPIOB
-#define ENKey_Pin GPIO_PIN_0
-#define ENKey_GPIO_Port GPIOE
 #define HallA_Pin GPIO_PIN_13
 #define HallA_GPIO_Port GPIOE
 #define HallB_Pin GPIO_PIN_14

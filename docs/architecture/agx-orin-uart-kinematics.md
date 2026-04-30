@@ -130,6 +130,9 @@ delta = atan(L * wz / vx)
 - `PD14` 触发时立即进入保障/急停覆盖
 
 ## 可调参数
+默认值集中在 `WHEELTEC_APP/Inc/app_vehicle_config.h`；以下 `g_orin_*`
+变量仍可通过 Keil Watch 临时覆盖。
+
 Ackermann 几何：
 - `g_orin_ackermann_wheelbase_mm`
 - `g_orin_ackermann_track_width_mm`
